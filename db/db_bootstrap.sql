@@ -143,14 +143,24 @@ CREATE TABLE workoutRoutine (
     name CHAR(50) PRIMARY KEY NOT NULL
 );
 
-CREATE TABLE workoutCreated (
+CREATE TABLE trainerWorkoutCreated (
     workoutName CHAR(50) NOT NULL,
     trainerUsername CHAR(25),
     PRIMARY KEY (workoutName, trainerUsername),
     CONSTRAINT fk_9
         FOREIGN KEY (workoutName) REFERENCES workoutRoutine (name),
-    CONSTRAINT fk_check
+    CONSTRAINT fk_trn
         FOREIGN KEY (trainerUsername) REFERENCES trainer (username)
+);
+
+CREATE TABLE memberWorkoutCreated (
+    workoutName CHAR(50) NOT NULL,
+    memberUsername CHAR(25),
+    PRIMARY KEY (workoutName, memberUsername),
+    CONSTRAINT fk_27
+        FOREIGN KEY (workoutName) REFERENCES workoutRoutine (name),
+    CONSTRAINT fk_mem
+        FOREIGN KEY (memberUsername) REFERENCES member (username)
 );
 
 CREATE TABLE workoutDone (
@@ -244,6 +254,7 @@ CREATE TABLE likes (
 CREATE TABLE workoutContains (
     workoutName CHAR(50) NOT NULL,
     exerciseName CHAR(50) NOT NULL,
+    weight TINYINT,
     sets TINYINT UNSIGNED,
     reps TINYINT UNSIGNED,
     repTime TINYINT UNSIGNED,
