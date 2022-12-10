@@ -518,10 +518,3 @@ VALUES
     ('Workout #3', 'Reverse Crunches', 0, 3, 20, null, null),
     ('Workout #3', 'Supermans', 0, 3, 15, null, null),
     ('Workout #3', 'Side Plank', 0, 6, null, 30, null);
-
-SELECT email
-FROM member m
-WHERE m.username = 'biden';
-
-SELECT *
-FROM member;
