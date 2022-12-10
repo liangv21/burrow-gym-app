@@ -5,44 +5,30 @@ from src import db
 
 trainers = Blueprint('trainers', __name__)
 
-# Get all the trainers from the database
-@trainers.route('/trainers', methods=['GET'])
-def get_trainers():
-    # get a cursor object from the database
+# create a training session event
+@trainers.route('/createtraining/<username>', methods=['POST'])
+def create_workout(username):
+
+    # add details about session
+    session_name = request.form['Name']
+    day_of_session = request.form['Day']
+    start_time = request.form['Start Time']
+    end_time = request.form['End Time']
+    cost = request.form['Cost']
+    description = request.form['Description']
+    street_address = request.form['Street Address']
+    city = request.form['City']
+    state = request.form['State']
+    zipcode = request.form ['Zip Code']
+
+    # add to database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for a list of products
-    cursor.execute('select firstName, lastName from trainer')
-
-    # grab the column headers from the returned data
-    column_headers = [x[0] for x in cursor.description]
-
-    # create an empty dictionary object to use in
-    # putting column headers together with data
-    json_data = []
-
-    # fetch all the data from the cursor
-    theData = cursor.fetchall()
-
-    # for each of the rows, zip the data elements together with
-    # the column headers.
-    for row in theData:
-        json_data.append(dict(zip(column_headers, row)))
-
-    return jsonify(json_data)
-
-# create a workout routine
-@trainers.route('/createworkout', methods=['POST'])
-def create_workout():
-    workout_name = request.form['Name']
-
-    # add first exercise
-    exercise1 = request.form['Exercise 1']
-    set1 = request.form['Sets for Exercise 1']
-    rep1 = request.form['Reps for Exercise 1']
-    rep_time1 = request.form['Rep Time for Exercise 1']
-    rest_time1 = request.form['Rest Time for Exercise 1']
-
     query = '''
-        INSERT INTO 
-    '''
+        INSERT INTO trainingSession
+            (sessionID, description, name, cost, streetAddress, city, state, zipCode, calendarDate, startTime, endTime, trainerUsername)
+        VALUES
+            ((SELECT max(sessionID) FROM trainingSession) + 1, {desc}, {name}, {cost}, {add}, {city}, {state}, {zip}, {day}, {start}, {end}, {user})
+    '''.format(description, session_name, cost, street_address, city, state, zipcode,
+               day_of_session, start_time, end_time, username)
+    cursor.execute(query)
+    cursor.connection.commit()
