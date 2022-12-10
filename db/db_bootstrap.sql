@@ -83,6 +83,7 @@ CREATE TABLE event (
 CREATE TABLE trainingSession (
     sessionID TINYINT UNSIGNED NOT NULL UNIQUE,
     description NVARCHAR(500),
+    name CHAR(200) NOT NULL,
     cost TINYINT UNSIGNED NOT NULL,
     streetAddress CHAR(200) NOT NULL,
     city CHAR(50) NOT NULL,
@@ -292,7 +293,7 @@ INSERT INTO gym
 VALUES
     ('ymcaboston', 'whyemseea', 'ymca@ymca.org', 1111111111, 'YMCA Boston', '316 Huntington Ave', 'Boston', 'MA', 02115, 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/YMCA_Huntington_Avenue_Boston_entrance.jpg/220px-YMCA_Huntington_Avenue_Boston_entrance.jpg', '50', '20'),
     ('planetfitness', 'saturniscool', 'planetfitness@pf.org', 2222222222, 'Planet Fitness', '17 Winter St', 'Boston', 'MA', 02108, 'https://prodd8.planetfitness.com/sites/default/files/styles/gallery_full_image/public/2021-05/exterior_1.jpg', '40', '10'),
-    ('southend', 'fitnesscenter', 'southend@south.south', 3333333333, 'South End Fitness Center', '785 Albany St, 4th Fl', 'Boston', 'MA', 02118, 'https://cdntrust.s3.us-east-2.amazonaws.com/busines/b552a450-c4d3-4d5f-9299-d592582150dd/0.jpg', '45, 15'),
+    ('southend', 'fitnesscenter', 'southend@south.south', 3333333333, 'South End Fitness Center', '785 Albany St, 4th Fl', 'Boston', 'MA', 02118, 'https://cdntrust.s3.us-east-2.amazonaws.com/busines/b552a450-c4d3-4d5f-9299-d592582150dd/0.jpg', '45', '15'),
     ('marino', 'nosquatracks', 'marino@marino.edu', 4444444444, 'Marino Recreation Center', '369 Huntington Ave', 'Boston', 'MA', 02115, 'https://huntnewsnu.com/wp-content/uploads/2014/05/4847936340_ac406b6658_b-1024x683.jpg', '2', '1'),
     ('randomgym', 'randomgym', 'random@random.gym', 5555555555, 'Random Gym', '123 Boston Ave', 'New York', 'NY', 10009, null, '30', '20');
 
@@ -300,19 +301,19 @@ INSERT INTO event
     (eventID, description, name, streetAddress, city, state, zipCode, calendarDate, startTime, endTime, hostGym, supervisorTrainer)
 VALUES
     (1, '[26:2] The LORD appeared to Isaac and said, "Do not go down to Egypt; settle in the land that I shall show you."', 'Workout with Wanda', '456 Random Ave', 'Boston', 'MA', 02113, '2022-10-09', '15:45:00', '16:45:00', 'ymcaboston', 'another_trainer'),
-    (2, 'Jesus did many other things as well. If every one of them were written down, I suppose that even the whole world would not have room for the books that would be written.', 'Protein Powder Potluck', '321 Huntington Ave', 'Boston', 'MA', 02110, '2022-12-10', '12:00:00', '14:00:00,' 'ymcaboston', 'yetanother'),
+    (2, 'Jesus did many other things as well. If every one of them were written down, I suppose that even the whole world would not have room for the books that would be written.', 'Protein Powder Potluck', '321 Huntington Ave', 'Boston', 'MA', 02110, '2022-12-10', '12:00:00', '14:00:00', 'ymcaboston', 'yetanother'),
     (3, '"But Jael, Heber''s wife, picked up a tent peg and a hammer and went quietly to him while he lay fast asleep, exhausted. She drove the peg through his temple into the ground, and he died."', 'Gym Rats Eat Cheese', '456 Gainsborough St', 'Boston', 'MA', 02115, '2022-12-11', '16:00:00', '18:00:00', 'ymcaboston', null),
     (4, '"Our father is old, and there is no man around here to give us children. Let us get our father to drink wine and then sleep with him and preserve our family line through our father"', '72nd Annual Powerlifting Nationals', '316 Huntington Ave', 'Boston', 'MA', 02115, '2023-01-01', '00:00:00', '05:00:00', 'ymcaboston', null),
     (5, 'This is a random event description', 'Random Event Name', '123 Random St', 'Random', 'NY', 12345, '2023-02-02', '03:30:00', '04:30:00', 'randomgym', null);
 
 INSERT INTO trainingSession
-    (sessionID, description, cost, streetAddress, city, state, zipCode, calendarDate, startTime, endTime, trainerUsername)
+    (sessionID, description, name, cost, streetAddress, city, state, zipCode, calendarDate, startTime, endTime, trainerUsername)
 VALUES
-    (1, '[26:2] The LORD appeared to Isaac and said, "Do not go down to Egypt; settle in the land that I shall show you."', 'Crying With Calisthenics', '369 Huntington Ave', 'Boston', 'MA', 02115, '2022-12-11', '09:00:00', '10:00:00', 'jyaleen_trainer'),
-    (2, '[38:26] Then Judah acknowledged them and said, "She is more in the right than I, since I did not give her to my son Shelah." And he did not lie with her again.', '99 Symphony', 'Boston', 'MA', 02115, '2022-12-12', '12:00:00', '14:00:00', 'jyaleen_trainer'),
-    (3, '[46:1] When Israel set out on his journey with all that he had and came to Beer-sheba, he offered sacrifices to the God of his father Isaac.', 'Yoga with Togas', '100 Westland Ave', 'Boston', 'MA', 02115, '2022-12-13', '15:00:00', '16:00:00', 'jyaleen_trainer'),
-    (4, 'We are a group of driven college students who seek to spread Chinese culture through artful and unique performances of Chinese Dragon Dance and Lion Dance.', 'Dying with Dragon Dance', '400 Huntington Ave', 'Boston', 'MA', 02115, '2023-01-14', '19:00:00', '21:30:00', 'jyaleen_trainer'),
-    (5, 'This is a random training session description', 'Random Training Session Name', '123 Random St', 'Random', 'NY', 12345, '2023-03-03', '04:40:00', '05:40:00', 'haha');
+    (1, '[26:2] The LORD appeared to Isaac and said, "Do not go down to Egypt; settle in the land that I shall show you."', 'Crying With Calisthenics', 10, '369 Huntington Ave', 'Boston', 'MA', 02115, '2022-12-11', '09:00:00', '10:00:00', 'jyaleen_trainer'),
+    (2, '[38:26] Then Judah acknowledged them and said, She is more in the right than I, since I did not give her to my son Shelah. And he did not lie with her again.', 'Pouting with Powerlifters', 20, '99 Symphony', 'Boston', 'MA', 02115, '2022-12-12', '12:00:00', '14:00:00', 'jyaleen_trainer'),
+    (3, '[46:1] When Israel set out on his journey with all that he had and came to Beer-sheba, he offered sacrifices to the God of his father Isaac.', 'Yoga with Togas', 25, '100 Westland Ave', 'Boston', 'MA', 02115, '2022-12-13', '15:00:00', '16:00:00', 'jyaleen_trainer'),
+    (4, 'We are a group of driven college students who seek to spread Chinese culture through artful and unique performances of Chinese Dragon Dance and Lion Dance.', 'Dying with Dragon Dance', 200, '400 Huntington Ave', 'Boston', 'MA', 02115, '2023-01-14', '19:00:00', '21:30:00', 'jyaleen_trainer'),
+    (5, 'This is a random training session description', 'Random Training Session Name', 12, '123 Random St', 'Random', 'NY', 12345, '2023-03-03', '04:40:00', '05:40:00', 'haha');
 
 INSERT INTO exercises
     (name, description, safety, visual, isTimed, exerciseType)
@@ -465,11 +466,11 @@ VALUES
 INSERT INTO employedBy
     (gymUsername, trainerUsername)
 VALUES
-    ('jyaleen_trainer', 'marino'),
-    ('haha', 'ymcaboston'),
-    ('another_trainer', 'southend'),
-    ('yetanother', 'planetfitness'),
-    ('fifthtrainer', 'randomgym');
+    ('marino', 'jyaleen_trainer'),
+    ('ymcaboston', 'haha'),
+    ('southend', 'another_trainer'),
+    ('planetfitness', 'yetanother'),
+    ('randomgym', 'fifthtrainer');
 
 INSERT INTO featuredIn
     (eventID, exerciseName)
@@ -515,5 +516,3 @@ VALUES
     ('Workout #3', 'Reverse Crunches', 0, 3, 20, null, null),
     ('Workout #3', 'Supermans', 0, 3, 15, null, null),
     ('Workout #3', 'Side Plank', 0, 6, null, 30, null);
-
-

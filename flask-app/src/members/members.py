@@ -95,31 +95,14 @@ def get_workout(username):
 
     return jsonify(json_data)
 
-# edit or create their own workout
-@members.route('/createworkout/<username>', methods=['PUT', 'POST'])
-def create_workout():
+# create their own workout
+@members.route('/createworkout/<username>', methods=['POST'])
+def create_workout(username):
+    workout_name = request.form['workoutName']
+
     cursor = db.get_db().cursor()
-    query = '''
-        SELECT p.productCode, productName, sum(quantityOrdered) as totalOrders
-        FROM products p JOIN orderdetails od on p.productCode = od.productCode
-        GROUP BY p.productCode, productName
-        ORDER BY totalOrders DESC
-        LIMIT 5;
-    '''
+    query = ''
     cursor.execute(query)
-       # grab the column headers from the returned data
-    column_headers = [x[0] for x in cursor.description]
+    cursor.connection.commit()
 
-    # create an empty dictionary object to use in
-    # putting column headers together with data
-    json_data = []
-
-    # fetch all the data from the cursor
-    theData = cursor.fetchall()
-
-    # for each of the rows, zip the data elements together with
-    # the column headers.
-    for row in theData:
-        json_data.append(dict(zip(column_headers, row)))
-
-    return jsonify(json_data)
+    return get_workout()
