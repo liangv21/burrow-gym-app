@@ -68,16 +68,15 @@ def get_gyms(username):
     return jsonify(json_data)
 
 # get their own workout
-@members.route('/createworkout/<username>')
-def get_workout():
+@members.route('/getworkout/<username>', methods=['GET'])
+def get_workout(username):
     cursor = db.get_db().cursor()
     query = '''
-        SELECT p.productCode, productName, sum(quantityOrdered) as totalOrders
-        FROM products p JOIN orderdetails od on p.productCode = od.productCode
-        GROUP BY p.productCode, productName
-        ORDER BY totalOrders DESC
-        LIMIT 5;
-    '''
+        SELECT wr.name, wc.exerciseName, wc.weight, wc.sets, wc.reps, wc.repTime
+        FROM workoutContains wc JOIN workoutRoutine wr ON wc.workoutName = wr.name
+                                JOIN memberWorkoutCreated mwc on mwc.workoutName = wr.name
+        WHERE mwc.memberUsername = {} 
+    '''.format(username)
     cursor.execute(query)
        # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]

@@ -1,7 +1,7 @@
 # create new database for the app
 CREATE DATABASE burrowGymApp;
 
-# set burrowGymApp as current database
+# set bursrowGymApp as current database
 USE burrowGymApp;
 
 # create new administrative position with username/password
@@ -24,8 +24,8 @@ CREATE TABLE member (
     lastName TINYTEXT NOT NULL,
     middleInitial TINYTEXT,
     age TINYINT UNSIGNED NOT NULL,
-    userBio CHAR(225),
-    profilePic BLOB,
+    userBio NVARCHAR(500),
+    profilePic NVARCHAR(2000),
     city CHAR(50) NOT NULL,
     state CHAR(50)
 );
@@ -39,8 +39,8 @@ CREATE TABLE trainer (
     lastName TINYTEXT NOT NULL,
     middleInitial TINYTEXT,
     age TINYINT UNSIGNED NOT NULL,
-    userBio CHAR(225),
-    profilePic BLOB,
+    userBio NVARCHAR(500),
+    profilePic NVARCHAR(2000),
     city CHAR(50) NOT NULL,
     state CHAR(50)
 );
@@ -54,17 +54,20 @@ CREATE TABLE gym (
     streetAddress CHAR(200) UNIQUE NOT NULL,
     city CHAR(50) NOT NULL,
     state CHAR(50),
+    zipCode BIGINT UNSIGNED,
+    profilePic NVARCHAR(2000),
     capacity INT NOT NULL,
     currentCapacity INT NOT NULL
 );
 
 CREATE TABLE event (
     eventID TINYINT UNSIGNED NOT NULL UNIQUE,
-    description CHAR(225),
+    description NVARCHAR(500),
     name TINYTEXT NOT NULL,
     streetAddress CHAR(200) NOT NULL,
     city CHAR(50) NOT NULL,
     state CHAR(50),
+    zipCode BIGINT UNSIGNED,
     calendarDate DATE NOT NULL,
     startTime TIME NOT NULL,
     endTime TIME NOT NULL,
@@ -79,11 +82,12 @@ CREATE TABLE event (
 
 CREATE TABLE trainingSession (
     sessionID TINYINT UNSIGNED NOT NULL UNIQUE,
-    description CHAR(225),
+    description NVARCHAR(500),
     cost TINYINT UNSIGNED NOT NULL,
     streetAddress CHAR(200) NOT NULL,
     city CHAR(50) NOT NULL,
     state CHAR(50),
+    zipCode BIGINT UNSIGNED,
     calendarDate DATE NOT NULL,
     startTime TIME NOT NULL,
     endTime TIME NOT NULL,
@@ -95,19 +99,11 @@ CREATE TABLE trainingSession (
 
 CREATE TABLE exercises (
     name CHAR(50) PRIMARY KEY NOT NULL UNIQUE,
-    description CHAR(225),
-    safety CHAR(225) NOT NULL,
-    visual BLOB,
+    description NVARCHAR(500),
+    safety NVARCHAR(500) NOT NULL,
+    visual NVARCHAR(2000),
     isTimed BOOL,
     exerciseType CHAR(50)
-);
-
-CREATE TABLE memberGymInterests (
-    memberUsername CHAR(25) NOT NULL,
-    interest CHAR(50),
-    PRIMARY KEY (memberUsername, interest),
-    CONSTRAINT fk_4
-        FOREIGN KEY (memberUsername) REFERENCES member (username)
 );
 
 CREATE TABLE memberSocialMedia (
@@ -190,7 +186,9 @@ CREATE TABLE trainerGymInterests (
     interest CHAR(50),
     PRIMARY KEY (trainerUsername, interest),
     CONSTRAINT fk_14
-        FOREIGN KEY (trainerUsername) REFERENCES trainer (username)
+        FOREIGN KEY (trainerUsername) REFERENCES trainer (username),
+    CONSTRAINT fk_exercise2
+        FOREIGN KEY (interest) REFERENCES exercises (name)
 );
 
 CREATE TABLE trainerSocialMedia (
@@ -240,10 +238,10 @@ CREATE TABLE gymAmenities (
         FOREIGN KEY (gymUsername) REFERENCES gym (username)
 );
 
-CREATE TABLE likes (
+CREATE TABLE memberGymInterests (
     memberUsername CHAR(25) NOT NULL,
     exerciseName CHAR(50) NOT NULL,
-    pr CHAR(50) NOT NULL,
+    pr INT UNSIGNED,
     PRIMARY KEY (memberUsername, exerciseName),
     CONSTRAINT fk_22
         FOREIGN KEY (memberUsername) REFERENCES member (username),
@@ -266,148 +264,256 @@ CREATE TABLE workoutContains (
         FOREIGN KEY (exerciseName) REFERENCES exercises (name)
 );
 
-CREATE TABLE targetMuscles (
-    exerciseName CHAR(50) PRIMARY KEY NOT NULL,
-    muscleGroup CHAR(255),
-    CONSTRAINT fk_26
-        FOREIGN KEY (exerciseName) REFERENCES exercises (name)
-);
-
 # insert table data
-insert into member (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state) values ('wklisch0', 'LyJ40X', 'wklisch0@economist.com', 1277494588, 'Townie', 'Klisch', null, 42, 'Arteriovenous malformation, other site', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHtSURBVDjLY/j//z8DJZiBKgY49drM9J3idhLEtu+xjvea4nLNqsVspnWr2S6QmF6+Zol2ltpq5QSlmcpxijMxDABp9pjkuMuu28rIpsMi3rLZFKzIus38mm6OuqRxpf41nC5w7rOJd+i1ngnUXGLTbj7Tsskk3rbL8ppZreEu7Ry1mWpJSvHK8Uoz0TWK5U/nYIg8y8rgPsl+l12P1WqgbTPdJtk/AtoWb1CkBdagnqyyWilawVM/Rw/FBQyx540ZGm/eYIg8P43BdYLdSZiEcYXeTJB/TaoNroH8q5OldVIhXE5SKUqhXSNRfZdKvPKVkOrED+L9d/8wN998w+B4XIL40I48K8FQf/O6+7In/7mbb35hsD2qjBKNDLU3ExjKb7pi1Rx61ke89+6fwBVP/jPXXn/HYHlYGiMdMJTe1JJc/PgHQ/X1xQyplznBYuFnmRiiz062nPfof8DSJ/8ZSq8/ZzA9KIEzIQE1Vvuuf/6fufv2M4bgsz4MxVdPui8Cal4C1Jx/+RGDPqpmTANiz7MAvXI+bO2L/5ZzHvzP2Pjif8DCx/8ZMi/fY9DcL0FUUmbwPKkg3Hr7T+WOV//95j/8z5B6/jaD6l4JkvIC0J9FTtPu/2dIPn+PQXG3BFmZiUFzbweDLH7NVMmNAOGld33BRiNUAAAAAElFTkSuQmCC', 'Bộc Bố', null);
-insert into member (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state) values ('kplues1', 'vvA6ISvnvJs', 'jplues1@1688.com', 4083404377, 'Dewey', 'Plues', null, 75, null, null, 'Itaberaí', null);
-insert into member (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state) values ('ebason2', 'jqfGyLmfi', 'ibason2@youtube.com', 5806680799, 'Kean', 'Bason', null, 73, 'Nondisp artic fx head of r femr, init for opn fx type 3A/B/C', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALBSURBVDjLbVNLSFRRGP7uw3lpw5TaNCZ5R6eEhIhahBFRoIsetEgJImhRUBQTUpCLFhK5dN8ycDESLSqCULLoSVZYDZYDTo7TOCTJTOk4zeu+Tv+5OjZWB37uOf/5/+9833fOFRhjqBxDQ0M1pmleNQyjnWIDBSh+Uozpuj7Q09Pzq7JeqAQIhUI7qfluQ0OD3+12QxRF0BrFYhGpVApxGgR0vLe3N/wPADXX0ObHlpaWgKqqSCaTyOVy/HTIsgyv12vVRSKRacrt6OvrK/C1WEai5AWfzxfQNA3RaHQmm80qNLfx4POpqak5DkzsAiQlWO6TyxNKtrtcLsRiMVDT0WAwmKiQmujv7+9IJBIRRVGs2v8B1HPNdBqfx/HX4DnOjtcQ2/o1Hsy+OsPGYq2YzzgtzcfaxiExDczQwfTl0DQDg+FdlqlexwKObB5H67kPwjIDAunuOgiBLBEkJ30PAaZA/Bx8kwzSYOhZ3OjMUV6zWqZvv/4jgZ/EC/X0Hcj2OghCDRVWAU4PpU0gn4Gx9AVq4RtMPQ+nPwimlioAiCJMfpKKxcn3pLManu17kRwZoP6N2LK/E/H7z5GemEExnYFc/xZ2zxoAzZLBiKqndRtEWx25Y8IoGfiUdkJ8+gbqoozdp6/B7m9DYeIRIi9HMdpRdcl6B4zcZcywtC58DhOLd/RCdJhFE6VCCfGRxwgc6IYj9gzC4Em4Zu5BaaoFE9hluQzAtTKS4NmqQHLVEoCK5lPn0azpeHJiGI5NfuDwldVrla/7IJmCsgKgkgcmGcQ9mCSAdYCDjJRtlNchue3Ihx+i+sFFYvQdeerJLkkwJMytAnAJ9sazcDZJEGz25SsU6SZMA81ddYi8GEbjeidkqQrZlI6v8wLdG7tpPaTorT2MG2l5YT0cbSX01a/6Q0ZmdgGgX4g5GBwehn0hQ/gNd0qgkPVltHcAAAAASUVORK5CYII=', 'Akkol’', null);
-insert into member (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state) values ('atrowler3', 'zp5pir', 'ctrowler3@vk.com', 9496114863, 'Odille', 'Trowler', null, 47, null, null, 'Newport Beach', 'California');
-insert into member (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state) values ('bburriss4', 't15ewxLLeNAc', 'gburriss4@columbia.edu', 8881095427, 'Ketti', 'Burriss', null, 48, null, null, 'Dinaig', null);
+INSERT INTO member
+    (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state)
+VALUES
+    ('jyaleen_member', 'member_password', 'jyaleen@gymmember.com', 1234567890, 'Jyaleen', 'Member', null, '25', 'Hi there! My name is Jyaleen and I am a 25-year-old fitness enthusiast. I have been going to the gym and have seen great progress in my overall health and wellbeing. I love pushing myself to reach new fitness goals. In my free time, I enjoy hiking. I am excited to continue my fitness journey and inspire others along the way.', 'https://lh3.googleusercontent.com/pw/AL9nZEXr_-topVwCID22-xyGaJFVpTiD6ot5ZcHeTVQ-boB50uXDruw4MhCwF9LVZtli8Dh2QB-g1XK_qYHSdN0gLW29HondU2cLE5V7uRhOe9oIgjkPBFhyktBkPY6lmddzGIIcX2-ksPRiiColB7aJPejR=w505-h943-no?authuser=0', 'Boston', 'MA'),
+    ('bingusbongus', 'bingus123', 'bingus@gmail.com', 1987654321, 'Bingus', 'Bongus', null, '65', 'Hello! My name is Bingus and I love the gym.', 'https://i1.sndcdn.com/avatars-nfmrTVtUp0fzqzu9-EwxkWw-t500x500.jpg', 'Boston', 'MA'),
+    ('frenchman', 'bonjour', 'charles@france.net', 9817238492, 'Charles', 'de Gaulle', null, '51', 'Bonjour, I am Charles and I love working out with my friends to prepare for both World Wars.', 'https://www.biography.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTgwMTU3NzQwNTMyOTAxMjA4/gettyimages-515356660-copy.jpg', 'Boston', 'MA'),
+    ('greenogre', 'i<3fiona', 'shrek@theswamp.org', 3145682846, 'Shrek', 'Shrek', null, '20', 'On days where I am not in the gym, you can find me in my comfy little swamp.', 'https://i.insider.com/5c5dd439dde867479d106cc2?width=1000&format=jpeg&auto=webp', 'Boston', 'MA'),
+    ('biden', 'formervicepresident', 'biden@whitehouse.gov', 9119119111, 'Joe', 'Biden', null, '80', 'Stressed out from running the government? Just work out instead.', 'https://www.history.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTc2MzAyNDY4NjM0NzgwODQ1/joe-biden-gettyimages-1267438366.jpg', 'Boston', 'MA'),
+    ('fontenot', 'i<3cs3200', 'mark@databasedesign.com', 4123847192, 'Mark', 'Fontenot', null, '2', 'Tired of NEU kids but this is okay i guess', 'https://www.smu.edu/-/media/Images/News/Experts/Mark-Fontenot.jpg', 'Boston', 'MA'),
+    ('aaaaaaa', 'famousperson', 'arnold@arnold.net', 5348261947, 'Arnold', 'Schwarzenegger', null, '73', 'This is a bio.', 'https://upload.wikimedia.org/wikipedia/commons/a/af/Arnold_Schwarzenegger_by_Gage_Skidmore_4.jpg', 'Boston', 'MA'),
+    ('notrelevant', 'notrelevant', 'irrelevant@irrelevant.net', 4826491782, 'Not', 'Relevant', 'NR', '14', 'This is a tester user with a different city', null, 'New York', 'NY'),
+    ('onemore', 'onemore', 'onemore@gmail.com', 9472619847, 'One', 'More', null, '25', 'This is one more useless user.', null, 'New York', 'NY');
 
-insert into trainer (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state) values ('dgehrels0', 'Tige3p', 'egehrels0@woothemes.com',7875873669, 'Lesley', 'Gehrels', null, 25, null, null, 'Gandajika', null);
-insert into trainer (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state) values ('dtew1', '1qha460Mn', 'vtew1@nsw.gov.au', 7427382357, 'Dulciana', 'Tew', null, 44, null, null, 'Châteaurenard', 'Provence-Alpes-Côte d''Azur');
-insert into trainer (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state) values ('shardy2', 'nMj4ygE8KJ', 'ehardy2@guardian.co.uk', 6008826067, 'Reynolds', 'Hardy', null, 44, 'Displ oblique fx shaft of unsp tibia, 7thK', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHcSURBVDjLhZPZihpREIb7JeY2wbcQmjxZbrIQ5nKSIYQ8gyuKOwqKihuKKy5xnJ5GRzteTIjTp51e+HPqDDaKSy7qoqvq/+qvYykNBgP0+310u110Oh202220Wi00m000Go0rANKlkHq9HhzHOYr5fC4g1Wr1IkSiySRQVVVMVhTFhVCOu0CpVDoLkcgyNdM0StTr9eZms4FlWSJPwEqlgnw+fxIi0dRdIxe/cMuqYRgw2SO2v9OiNpvNUCwWkcvljiASTd5Ztm0bJLa3GvTpZ+iT9xySErXpdEoukE6nDyAS35Gt12vRZJomTP0R+q9PYPc3MB6+C9AOMplMyAXi8bgLkWq12ju+I9M0TTRtnzp45pOZ8g2G+vMIMh6PyQUikYiACEq5XJb5jmy1Wr1C/vQ55CMM5XYPwr+1hKgPh0NygVAodOXuUigUZL4jWy6Xx5CHH2B313gaXcOxLeEimUwiEAi8PXhRvp+czWbZYrHYg3yAfvcFf6e3eDE2+2KPu8J+ZDIZOZVKMbrEV0gPz/df4ViGK/b7/R73EU8dRyKRkGOxGKNL3P3EJOb5A/FZAEU0GvXyl2Z0YKPR6KT4IoAiHA57g8EgI7HP5/OcPOX//V35VC8XvzlX/we1NDqN64FopAAAAABJRU5ErkJggg==', 'Canedo', 'Aveiro');
-insert into trainer (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state) values ('jchampley3', 'e62LSIHEmLGt', 'jchampley3@google.it', 7549786563, 'Evangelin', 'Champley', null, 41, null, null, 'Lens', 'Nord-Pas-de-Calais');
-insert into trainer (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state) values ('hmcginny4', 'Q92CfhSzvQJ', 'bmcginny4@people.com.cn', 1186466544, 'Giff', 'McGinny', null, 54, 'Age-related incipient cataract', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGaSURBVBgZpcG9alRRGIXh99vnKIGgrbaCl5BOC2/BJgi2NmIlFoK9oI1CIJ39kInxhxReh1VKCZmfQkiVTOLs863l7GAau5DnCdtcRzx+ufPi4aON98cLr9uAhCVSiWVk4Uxk40xS4vbNenpwMH395cPmdr/xYGPrxtp6ubPGVayfLnIL2O4X1WVxfMJVnVUXVnqnefv0Plf17N0hTW+LZjkkBiyTAmEkkxI5mBxMWizT3Lt7i1TS9Ng0UYKwcQkcJhSUEkQUIpLoTKdCP5hGQ9L0qaQpgCMgoDMoQDKdoURHH5BhsohGKZpimdFoxGQyYXdnh9nREXvjMbPphO97u8ynE/a/7jKbT/ix/5nf8zmj0QgpufDq0083g+RB8iC5Zrpmepnp80z/qdVny+rFsvrkvLp58uabV+iHWrkQQQC2iQjMik1hpRQ6IG1KmGaoA03vFE0HmJUIsGkigksCuggs0Vii6SVxKYBgJYL/dfzTdTSyafrpr8Px8491U5koRWYiiawVScjGSpxGFpaQaMashG2uo3BNfwFx+DLsFQ4W2wAAAABJRU5ErkJggg==', 'Buenavista', 'Oaxaca');
+INSERT INTO trainer
+    (username, password, email, phoneNum, firstName, lastName, middleInitial, age, userBio, profilePic, city, state)
+VALUES
+    ('jyaleen_trainer', 'trainer_password', 'jyaleen@gymtrainer.com', 8273638282, 'Jyaleen', 'Trainer', null, '25', 'Hi there! My name is Jyaleen and I am a 25-year-old fitness enthusiast. I have been going to the gym and have seen great progress in my overall health and wellbeing. I love pushing myself to reach new fitness goals. In my free time, I enjoy hiking. I am excited to continue my fitness journey and inspire others along the way.', 'https://lh3.googleusercontent.com/pw/AL9nZEXr_-topVwCID22-xyGaJFVpTiD6ot5ZcHeTVQ-boB50uXDruw4MhCwF9LVZtli8Dh2QB-g1XK_qYHSdN0gLW29HondU2cLE5V7uRhOe9oIgjkPBFhyktBkPY6lmddzGIIcX2-ksPRiiColB7aJPejR=w505-h943-no?authuser=0', 'Boston', 'MA'),
+    ('another_trainer', 'another_trainer', 'another@gymtrainer.com', 4726374893, 'Wanda', 'Wiggles', null, '58', 'This is another trainer for testing purposes!', null, 'Boston', 'MA'),
+    ('yetanother', 'yetanother', 'hm@gmail.com', 9152837474, 'Bob', 'Bobby', null, '12', null, null, 'Boston', 'MA'),
+    ('haha', 'hahahaha', 'haha@yahoo.com', 9163528472, 'Caitlin', 'Cool', null, '41', null, null, 'New York', 'NY'),
+    ('fifthtrainer', 'fifth', 'five@aol.com', 5555555555, 'Fiona', 'Fifth', null, '55', null, null, 'New York', 'NY');
 
-insert into gym (username, password, email, phoneNum, name, streetAddress, city, state, capacity, currentCapacity) values ('sgotthard0', 'A6ssdSnkdJt', 'amacalaster0@bizjournals.com', 8295446634, 'Kling, Pfannerstill and Lang', '123 Potato St', 'Dumaguete', null, 54, 194);
-insert into gym (username, password, email, phoneNum, name, streetAddress, city, state, capacity, currentCapacity) values ('njancik1', 'LQUwCVccH', 'mwatting1@exblog.jp', 7474115908, 'Zieme-Walker', '456 Tomato St', 'Xinzha', null, 10, 154);
-insert into gym (username, password, email, phoneNum, name, streetAddress, city, state, capacity, currentCapacity) values ('cbaffin2', 'mcD1SJ9xrp', 'bmariet2@bbc.co.uk', 3134453407, 'Daugherty and Sons', '12 Symphony Drive', 'Daba', null, 24, 174);
-insert into gym (username, password, email, phoneNum, name, streetAddress, city, state, capacity, currentCapacity) values ('ffragino3', '1b5pvy15', 'fbyne3@instagram.com', 1488940438, 'Kuvalis Inc', '58-31 Hello Ave', 'Mambi', null, 15, 191);
-insert into gym (username, password, email, phoneNum, name, streetAddress, city, state, capacity, currentCapacity) values ('rburke4', 'urrOzV7', 'fwindrass4@canalblog.com', 4974078881, 'Schultz, Becker and Christiansen', '32 Database Drive', 'Puconci', null, 108, 154);
+INSERT INTO gym
+    (username, password, email, phoneNum, name, streetAddress, city, state, zipCode, profilePic, capacity, currentCapacity)
+VALUES
+    ('ymcaboston', 'whyemseea', 'ymca@ymca.org', 1111111111, 'YMCA Boston', '316 Huntington Ave', 'Boston', 'MA', 02115, 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/YMCA_Huntington_Avenue_Boston_entrance.jpg/220px-YMCA_Huntington_Avenue_Boston_entrance.jpg', '50', '20'),
+    ('planetfitness', 'saturniscool', 'planetfitness@pf.org', 2222222222, 'Planet Fitness', '17 Winter St', 'Boston', 'MA', 02108, 'https://prodd8.planetfitness.com/sites/default/files/styles/gallery_full_image/public/2021-05/exterior_1.jpg', '40', '10'),
+    ('southend', 'fitnesscenter', 'southend@south.south', 3333333333, 'South End Fitness Center', '785 Albany St, 4th Fl', 'Boston', 'MA', 02118, 'https://cdntrust.s3.us-east-2.amazonaws.com/busines/b552a450-c4d3-4d5f-9299-d592582150dd/0.jpg', '45, 15'),
+    ('marino', 'nosquatracks', 'marino@marino.edu', 4444444444, 'Marino Recreation Center', '369 Huntington Ave', 'Boston', 'MA', 02115, 'https://huntnewsnu.com/wp-content/uploads/2014/05/4847936340_ac406b6658_b-1024x683.jpg', '2', '1'),
+    ('randomgym', 'randomgym', 'random@random.gym', 5555555555, 'Random Gym', '123 Boston Ave', 'New York', 'NY', 10009, null, '30', '20');
 
-insert into event (eventID, description, name, streetAddress, city, state, calendarDate, startTime, endTime, hostGym, supervisorTrainer) values (1, 'Replacement of Left Iris with Nonaut Sub, Perc Approach', 'Romaguera and Sons', '03598 Bashford Avenue', 'Umm Sa‘īd', null, '2022-01-17', '3:20', '6:20', 'sgotthard0', 'dgehrels0');
-insert into event (eventID, description, name, streetAddress, city, state, calendarDate, startTime, endTime, hostGym, supervisorTrainer) values (2, 'Drainage of Left Inferior Parathyroid Gland, Open Approach', 'Cummerata, Beier and Kerluke', '68325 American Ash Junction', 'Anle', null, '2021-11-27', '5:41', '11:03', 'cbaffin2', 'shardy2');
-insert into event (eventID, description, name, streetAddress, city, state, calendarDate, startTime, endTime, hostGym, supervisorTrainer) values (3, 'Dilation of Abdominal Aorta, Bifurcation, Open Approach', 'Zemlak-Hansen', '88184 Clemons Lane', 'Labuhan', null, '2022-08-31', '10:39', '17:07', 'sgotthard0', null);
-insert into event (eventID, description, name, streetAddress, city, state, calendarDate, startTime, endTime, hostGym, supervisorTrainer) values (4, 'Supplement L Fallopian Tube w Autol Sub, Perc Endo', 'Runolfsson, Parisian and Orn', '2 Morrow Point', 'Checca', null, '2022-04-18', '15:34', '23:23', 'sgotthard0', null);
-insert into event (eventID, description, name, streetAddress, city, state, calendarDate, startTime, endTime, hostGym, supervisorTrainer) values (5, 'Removal of Nonaut Sub from Kidney, Open Approach', 'Jacobson, Larson and Hilll', '92 Thompson Way', 'Mizur', null, '2022-08-18', '23:00', '21:40', 'ffragino3', null);
+INSERT INTO event
+    (eventID, description, name, streetAddress, city, state, zipCode, calendarDate, startTime, endTime, hostGym, supervisorTrainer)
+VALUES
+    (1, '[26:2] The LORD appeared to Isaac and said, "Do not go down to Egypt; settle in the land that I shall show you."', 'Workout with Wanda', '456 Random Ave', 'Boston', 'MA', 02113, 2022-10-09, 15:45:00, 16:45:00, 'ymcaboston', 'another_trainer'),
+    (2, 'Jesus did many other things as well. If every one of them were written down, I suppose that even the whole world would not have room for the books that would be written.', 'Protein Powder Potluck', '321 Huntington Ave', 'Boston', 'MA', 02110, 2022-12-10, 12:00:00, 14:00:00, 'ymcaboston', 'yetanother'),
+    (3, '"But Jael, Heber''s wife, picked up a tent peg and a hammer and went quietly to him while he lay fast asleep, exhausted. She drove the peg through his temple into the ground, and he died."', 'Gym Rats Eat Cheese', '456 Gainsborough St', 'Boston', 'MA', 02115, 2022-12-11, 16:00:00, 18:00:00, 'ymcaboston', null),
+    (4, '"Our father is old, and there is no man around here to give us children. Let us get our father to drink wine and then sleep with him and preserve our family line through our father"', '72nd Annual Powerlifting Nationals', '316 Huntington Ave', 'Boston', 'MA', 02115, 2023-01-01, 00:00:00, 05:00:00, 'ymcaboston', null),
+    (5, 'This is a random event description', 'Random Event Name', '123 Random St', 'Random', 'NY', 12345, 2023-02-02, 03:30:00, 04:30:00, 'randomgym', null);
 
-insert into trainingSession (sessionID, description, cost, streetAddress, city, state, calendarDate, startTime, endTime, trainerUsername) values (1, null, 30.24, '29 Kingsford Lane', 'Oranzherei', null, '2022-05-25', '15:17', '4:28', 'hmcginny4');
-insert into trainingSession (sessionID, description, cost, streetAddress, city, state, calendarDate, startTime, endTime, trainerUsername) values (2, 'Other specified injury of brachial artery', 38.4, '843 Stang Street', 'Pamakayo', null, '2022-04-06', '10:12', '6:12', 'jchampley3');
-insert into trainingSession (sessionID, description, cost, streetAddress, city, state, calendarDate, startTime, endTime, trainerUsername) values (3, null, 24.22, '6 Barby Park', 'Qitan', null, '2022-08-24', '16:17', '17:15', 'jchampley3');
-insert into trainingSession (sessionID, description, cost, streetAddress, city, state, calendarDate, startTime, endTime, trainerUsername) values (4, 'Disp fx of 2nd metatarsal bone, r ft, subs for fx w malunion', 12.53, '500 Ludington Terrace', 'Independencia', 'Guanajuato', '2022-09-17', '18:23', '18:49', 'dtew1');
-insert into trainingSession (sessionID, description, cost, streetAddress, city, state, calendarDate, startTime, endTime, trainerUsername) values (5, null, 28.11, '251 Corscot Alley', 'Yamaguchi-shi', null, '2022-06-15', '14:40', '16:39', 'hmcginny4');
+INSERT INTO trainingSession
+    (sessionID, description, cost, streetAddress, city, state, zipCode, calendarDate, startTime, endTime, trainerUsername)
+VALUES
+    (1, '[26:2] The LORD appeared to Isaac and said, "Do not go down to Egypt; settle in the land that I shall show you."', 'Crying With Calisthenics', '369 Huntington Ave', 'Boston', 'MA', 02115, 2022-12-11, 09:00:00, 10:00:00, 'jyaleen_trainer'),
+    (2, '[38:26] Then Judah acknowledged them and said, "She is more in the right than I, since I did not give her to my son Shelah." And he did not lie with her again.', '99 Symphony', 'Boston', 'MA', 02115, 2022-12-12, 12:00:00, 14:00:00, 'jyaleen_trainer'),
+    (3, '[46:1] When Israel set out on his journey with all that he had and came to Beer-sheba, he offered sacrifices to the God of his father Isaac.', 'Yoga with Togas', '100 Westland Ave', 'Boston', 'MA', 02115, 2022-12-13, 15:00:00, 16:00:00, 'jyaleen_trainer'),
+    (4, 'We are a group of driven college students who seek to spread Chinese culture through artful and unique performances of Chinese Dragon Dance and Lion Dance.', 'Dying with Dragon Dance', '400 Huntington Ave', 'Boston', 'MA', 02115, 2023-01-14, 19:00:00, 21:30:00, 'jyaleen_trainer'),
+    (5, 'This is a random training session description', 'Random Training Session Name', '123 Random St', 'Random', 'NY', 12345, 2023-03-03, 04:40:00, 05:40:00, 'haha');
 
-insert into exercises (name, description, safety, visual, isTimed, exerciseType) values ('Ziziphus reticulata (Vahl) DC.', 'Major contusion of spleen', 'Destruct conjunc les NEC', 'http://dummyimage.com/223x100.png/5fa2dd/ffffff', true, 'Seamless');
-insert into exercises (name, description, safety, visual, isTimed, exerciseType) values ('Viola vallicola A. Nelson var. vallicola', null, 'Pass musculosk exer NEC', 'http://dummyimage.com/236x100.png/5fa2dd/ffffff', false, 'User-centric');
-insert into exercises (name, description, safety, visual, isTimed, exerciseType) values ('Sesuvium L.', 'Oth injury due to oth accident on board merchant ship, subs', 'Bilat subq mammectom NEC', null, null, 'workforce');
-insert into exercises (name, description, safety, visual, isTimed, exerciseType) values ('Orthotrichum bolanderi Sull.', 'Nondisp fx of lateral condyle of r tibia, 7thM', 'Repl pacem 1-cham, rate', null, true, '4th generation');
-insert into exercises (name, description, safety, visual, isTimed, exerciseType) values ('Acer rubrum L.', null, 'Percu endosc jejunostomy', null, null, 'Implemented');
+INSERT INTO exercises
+    (name, description, safety, visual, isTimed, exerciseType)
+VALUES
+    ('Bicep Curls', 'Bicep curls are a strength training exercise that involves lifting weights from a hanging position to a contracted position in order to target and tone the biceps muscles.', 'Keep body in a neutral alignment and avoid compensation when performing the movement. Shoulders should remain stable. Elbows should be pinned to side.', 'https://www.inspireusafoundation.org/wp-content/uploads/2022/05/dumbbell-biceps-curl-1024x900.png', 0, 'Dumbbell'),
+    ('Shoulder Press', 'Shoulder press is a weightlifting exercise that involves raising a weight above the head with the palms facing forward in order to work the deltoid muscles in the shoulders.', 'Here is some safety information about doing shoulder presses.', 'https://static.strengthlevel.com/images/illustrations/dumbbell-shoulder-press-1000x1000.jpg', 0, 'Dumbbell'),
+    ('Plank', 'Plank involves holding the body in a straight line on the toes and forearms, with the back and legs straight in order to strengthen the core and improve overall stability.', 'Here is some safety information about planks.', 'https://cdn.spongebobwiki.org/0/04/Plankton.jpg', 1, 'Bodyweight'),
+    ('Russian Twist', 'The Russian twist is a core exercise that involves sitting on the ground with your knees bent and feet flat on the ground. This exercise works your abdominal muscles and can also help to improve your balance and stability.', 'Here is safety information on Russian Twists.', 'https://static.strengthlevel.com/images/illustrations/russian-twist-1000x1000.jpg', 0, 'Dumbbell'),
+    ('Push-Ups', 'A push-up is a bodyweight exercise in which you lower and raise your body using your arms and upper body strength.This exercise works your chest, triceps, and shoulders.', 'Here is some safety information about push-ups.', null, 0, 'Bodyweight'),
+    ('Chest Flies', 'Chest flies, also known as flyes or pectoral flies, are a strength training exercise that targets the muscles of the chest, specifically the pectoralis major.', 'Here is some safety information about chest flies.', null, 0, 'Strength'),
+    ('Lat Raises', 'Lat raises are a strength training exercise that targets the muscles of the back, specifically the latissimus dorsi, or lats.', 'Here is some safety information about lat raises.', null, 0, 'Strength'),
+    ('Squats', 'Squats are a full-body exercise that targets the muscles of the legs and lower body, including the quadriceps, hamstrings, and glutes.', 'Here is some safety information about squats.', null, 0, 'Full-Body'),
+    ('Hip Abduction', 'Hip abduction is a strength training exercise that targets the muscles of the hips, specifically the gluteus medius and gluteus minimus.', 'Here is some safety information about hip abductions.', null, 0, 'Strength'),
+    ('Leg Curls', 'Leg curls are a strength training exercise that targets the muscles of the lower leg, specifically the hamstrings.', 'Here is some safety information about leg curls.', null, 0, 'Strength'),
+    ('Calf Raises', 'Calf raises are a strength training exercise that targets the muscles of the lower leg, specifically the calves.', 'Here is some safety information about calf raises.', null, 0, 'Strength'),
+    ('Sit-Ups', 'Sit-ups are a core exercise that targets the muscles of the abdominal region.', 'Here is some safety information about sit-ups.', null, 0, 'Core'),
+    ('Reverse Crunches', 'Reverse crunches are a core exercise that targets the muscles of the lower abdominal region.', 'Here is some safety information about reverse crunches.', null, 0, 'Core'),
+    ('Supermans', 'Supermans is a core exercise that targets the muscles of the lower back.', 'Here is some safety information about supermans.', null, 0, 'Core'),
+    ('Side Plank', 'A side plank is a core exercise that targets the muscles of the side abdominal region, also known as the obliques.', 'Here is some safety information about side planks.', null, 0, 'Core');
 
-insert into memberGymInterests (memberUsername, interest) values ('wklisch0', 'a');
-insert into memberGymInterests (memberUsername, interest) values ('kplues1', 'tempor');
-insert into memberGymInterests (memberUsername, interest) values ('wklisch0', 'eget nunc donec quis orci');
-insert into memberGymInterests (memberUsername, interest) values ('ebason2', 'pulvinar sed nisl');
-insert into memberGymInterests (memberUsername, interest) values ('bburriss4', 'duis faucibus');
+INSERT INTO memberGymInterests
+    (memberUsername, exerciseName, pr)
+VALUES
+    ('jyaleen_member', 'Bicep Curls', 205),
+    ('jyaleen_member', 'Shoulder Press', 208),
+    ('jyaleen_member', 'Plank', null),
+    ('jyaleen_member', 'Russian Twist', 20),
+    ('bingusbongus', 'Chest Flies', 300),
+    ('bingusbongus', 'Bicep Curls', 200),
+    ('fontenot', 'Shoulder Press', 212),
+    ('fontenot', 'Russian Twist', 50),
+    ('biden', 'Plank', null),
+    ('biden', 'Squats', null),
+    ('biden', 'Supermans', null),
+    ('greenogre', 'Sit-Ups', null),
+    ('greenogre', 'Leg Curls', 110),
+    ('greenogre', 'Side Plank', null),
+    ('frenchman', 'Side Plank', null),
+    ('frenchman', 'Bicep Curls', 12),
+    ('frenchman', 'Plank', null);
 
-insert into memberSocialMedia (memberUsername, accountType, handle) values ('wklisch0', 'Tromp, Gorczany and Kertzmann', 'jsabbins0');
-insert into memberSocialMedia (memberUsername, accountType, handle) values ('ebason2', 'Strosin LLC', 'aslowly1');
-insert into memberSocialMedia (memberUsername, accountType, handle) values ('kplues1', 'Feeney-Bashirian', 'kdevenport2');
-insert into memberSocialMedia (memberUsername, accountType, handle) values ('atrowler3', 'Kiehn Inc', 'ofawdery3');
-insert into memberSocialMedia (memberUsername, accountType, handle) values ('atrowler3', 'Daniel LLC', 'kdublin4');
+INSERT INTO memberSocialMedia
+    (memberUsername, accountType, handle)
+VALUES
+    ('jyaleen_member', 'Instagram', 'jyaleeniscool'),
+    ('jyaleen_member', 'Snapchat', 'jyaleenisstillcool'),
+    ('jyaleen_member', 'BeReal', 'wooooojyaleen'),
+    ('fontenot', 'Twitter', 'fontenottwitter'),
+    ('fontenot', 'Instagram', 'instafontenot'),
+    ('biden', 'Twitter', 'thewhitehouse'),
+    ('greenogre', 'Facebook', 'greengreengreen'),
+    ('bingusbongus', 'TikTok', 'BingBong'),
+    ('onemore', 'Instagram', 'onemoresocialmedia');
 
-insert into availabilities (memberUsername, dayOfWeek, startTime, endTime) values ('atrowler3', 'Monday', '12:06', '17:52');
-insert into availabilities (memberUsername, dayOfWeek, startTime, endTime) values ('wklisch0', 'Tuesday', '8:58', '17:18');
-insert into availabilities (memberUsername, dayOfWeek, startTime, endTime) values ('kplues1', 'Wednesday', '14:18', '19:37');
-insert into availabilities (memberUsername, dayOfWeek, startTime, endTime) values ('bburriss4', 'Thursday', '19:10', '14:47');
-insert into availabilities (memberUsername, dayOfWeek, startTime, endTime) values ('ebason2', 'Friday', '19:33', '14:43');
+INSERT INTO availabilities
+    (memberUsername, dayOfWeek, startTime, endTime)
+VALUES
+    ('jyaleen_member', 'Monday', 12:00:00, 14:00:00),
+    ('jyaleen_member', 'Sunday', 14:00:00, 18:00:00),
+    ('fontenot', 'Saturday', 08:00:00, 14:00:00),
+    ('biden', 'Friday', 18:00:00, 23:00:00),
+    ('biden', 'Sunday', 12:00:00, 15:00:00);
 
-insert into attendsEvent (eventID, memberUsername) values (1, 'atrowler3');
-insert into attendsEvent (eventID, memberUsername) values (1, 'ebason2');
-insert into attendsEvent (eventID, memberUsername) values (2, 'kplues1');
-insert into attendsEvent (eventID, memberUsername) values (2, 'bburriss4');
-insert into attendsEvent (eventID, memberUsername) values (3, 'bburriss4');
+INSERT INTO attendsEvent
+    (eventID, memberUsername)
+VALUES
+    (1, 'jyaleen_member'),
+    (1, 'fontenot'),
+    (1, 'biden'),
+    (1, 'bingusbongus'),
+    (2, 'jyaleen_member'),
+    (2, 'greenogre'),
+    (3, 'fontenot'),
+    (4, 'biden'),
+    (5, 'frenchman'),
+    (5, 'jyaleen_member');
 
-insert into workoutRoutine (name) values ('Acetaminophen');
-insert into workoutRoutine (name) values ('Oxygen');
-insert into workoutRoutine (name) values ('T-BUTYL ALCOHOL');
-insert into workoutRoutine (name) values ('AVOBENZONE');
-insert into workoutRoutine (name) values ('Famotidine');
+INSERT INTO workoutRoutine
+    (name)
+VALUES
+    ('Workout #1'),
+    ('Workout #2'),
+    ('Workout #3'),
+    ('Workout Name'),
+    ('Another Workout Name'),
+    ('Trainer Workout'),
+    ('Workout Perfect for NY Trainers');
 
-insert into workoutCreated (workoutName, trainerUsername) values ('Acetaminophen', 'shardy2');
-insert into workoutCreated (workoutName, trainerUsername) values ('Oxygen', 'dtew1');
-insert into workoutCreated (workoutName, trainerUsername) values ('T-BUTYL ALCOHOL', 'dtew1');
-insert into workoutCreated (workoutName, trainerUsername) values ('AVOBENZONE', 'shardy2');
-insert into workoutCreated (workoutName, trainerUsername) values ('Famotidine', 'shardy2');
+INSERT INTO trainerWorkoutCreated
+    (workoutName, trainerUsername)
+VALUES
+    ('Workout Perfect for NY Trainers', 'haha'),
+    ('Trainer Workout', 'fifthtrainer'),
+    ('Another Workout Name', 'jyaleen_trainer');
 
-insert into workoutDone (workoutName, memberUsername, date, location) values ('Oxygen', 'bburriss4', '2022-06-29', null);
-insert into workoutDone (workoutName, memberUsername, date, location) values ('Oxygen', 'atrowler3', '2022-06-1', null);
-insert into workoutDone (workoutName, memberUsername, date, location) values ('Acetaminophen', 'bburriss4', '2022-04-29', null);
-insert into workoutDone (workoutName, memberUsername, date, location) values ('Famotidine', 'wklisch0', '2022-04-18', '939 Sullivan Hill');
-insert into workoutDone (workoutName, memberUsername, date, location) values ('Acetaminophen', 'atrowler3', '2022-04-22', null);
+INSERT INTO memberWorkoutCreated
+    (workoutName, memberUsername)
+VALUES
+    ('Workout #1', 'jyaleen_member'),
+    ('Workout #2', 'jyaleen_member'),
+    ('Workout #3', 'jyaleen_member'),
+    ('Workout Name', 'fontenot');
 
-insert into attendsTraining (sessionID, memberUsername) values (2, 'ebason2');
-insert into attendsTraining (sessionID, memberUsername) values (2, 'atrowler3');
-insert into attendsTraining (sessionID, memberUsername) values (3, 'kplues1');
-insert into attendsTraining (sessionID, memberUsername) values (5, 'wklisch0');
-insert into attendsTraining (sessionID, memberUsername) values (3, 'atrowler3');
+INSERT INTO workoutDone
+    (workoutName, memberUsername, date, location)
+VALUES
+    ('Workout #1', 'jyaleen_member', 2022-11-30, null),
+    ('Workout #1', 'biden', 2022-12-01, 'The White House'),
+    ('Workout Name', 'fontenot', 2022-12-10, 'Richards Classroom'),
+    ('Trainer Workout', 'frenchman', 2022-12-11, null),
+    ('Another Workout Name', 'greenogre', 2022-12-12, null);
 
-insert into trainerGymInterests (trainerUsername, interest) values ('dgehrels0', 'a');
-insert into trainerGymInterests (trainerUsername, interest) values ('dgehrels0', 'tempor');
-insert into trainerGymInterests (trainerUsername, interest) values ('shardy2', 'eget nunc donec quis orci');
-insert into trainerGymInterests (trainerUsername, interest) values ('dtew1', 'pulvinar sed nisl');
-insert into trainerGymInterests (trainerUsername, interest) values ('jchampley3', 'duis faucibus');
+INSERT INTO attendsTraining
+    (sessionID, memberUsername)
+VALUES
+    (1, 'jyaleen_member'),
+    (1, 'greenogre'),
+    (1, 'frenchman'),
+    (2, 'fontenot'),
+    (2, 'jyaleen_member'),
+    (2, 'bingusbongus'),
+    (2, 'frenchman'),
+    (4, 'jyaleen_member'),
+    (4, 'frenchman');
 
-insert into trainerSocialMedia (trainerUsername, accountType, handle) values ('jchampley3', 'Tromp, Gorczany and Kertzmann', 'easteregg');
-insert into trainerSocialMedia (trainerUsername, accountType, handle) values ('shardy2', 'Strosin LLC', 'whatisthis');
-insert into trainerSocialMedia (trainerUsername, accountType, handle) values ('dtew1', 'Feeney-Bashirian', 'randomusernameegghaha');
-insert into trainerSocialMedia (trainerUsername, accountType, handle) values ('shardy2', 'Kiehn Inc', 'wowisthisanotheruser');
-insert into trainerSocialMedia (trainerUsername, accountType, handle) values ('hmcginny4', 'Daniel LLC', 'omgyetanotheruser');
+INSERT INTO trainerGymInterests
+    (trainerUsername, interest)
+VALUES
+    ('jyaleen_trainer', 'Bicep Curls'),
+    ('jyaleen_trainer', 'Shoulder Press'),
+    ('jyaleen_trainer', 'Plank'),
+    ('jyaleen_trainer', 'Russian Twist'),
+    ('another_trainer', 'Plank'),
+    ('another_trainer', 'Supermans'),
+    ('haha', 'Plank'),
+    ('haha', 'Russian Twist'),
+    ('haha', 'Bicep Curls'),
+    ('haha', 'Push-Ups');
 
-insert into employedBy (gymUsername, trainerUsername) values ('cbaffin2', 'dgehrels0');
-insert into employedBy (gymUsername, trainerUsername) values ('cbaffin2', 'shardy2');
-insert into employedBy (gymUsername, trainerUsername) values ('cbaffin2', 'dtew1');
-insert into employedBy (gymUsername, trainerUsername) values ('rburke4', 'jchampley3');
-insert into employedBy (gymUsername, trainerUsername) values ('rburke4', 'hmcginny4');
+INSERT INTO trainerSocialMedia
+    (trainerUsername, accountType, handle)
+VALUES
+    ('jyaleen_trainer', 'Instagram', 'jyaleentrains'),
+    ('jyaleen_trainer', 'TikTok', 'jyaleentiktoks'),
+    ('jyaleen_trainer', 'Twitter', 'jyaleentweets'),
+    ('haha', 'Twitter', 'hahahaha'),
+    ('haha', 'Snapchat', 'hahahaha'),
+    ('haha', 'YouTube', 'hahahahahahaha');
 
-insert into featuredIn (eventID, exerciseName) values (1, 'Ziziphus reticulata (Vahl) DC.');
-insert into featuredIn (eventID, exerciseName) values (3, 'Viola vallicola A. Nelson var. vallicola');
-insert into featuredIn (eventID, exerciseName) values (3, 'Acer rubrum L.');
-insert into featuredIn (eventID, exerciseName) values (5, 'Viola vallicola A. Nelson var. vallicola');
-insert into featuredIn (eventID, exerciseName) values (5, 'Ziziphus reticulata (Vahl) DC.');
+INSERT INTO employedBy
+    (gymUsername, trainerUsername)
+VALUES
+    ('jyaleen_trainer', 'marino'),
+    ('haha', 'ymcaboston'),
+    ('another_trainer', 'southend'),
+    ('yetanother', 'planetfitness'),
+    ('fifthtrainer', 'randomgym');
 
-insert into gymSchedule (gymUsername, dayOfWeek, startTime, endTime) values ('cbaffin2', 'Monday', '6:00', '14:43');
-insert into gymSchedule (gymUsername, dayOfWeek, startTime, endTime) values ('sgotthard0', 'Tuesday', '6:43', '6:42');
-insert into gymSchedule (gymUsername, dayOfWeek, startTime, endTime) values ('sgotthard0', 'Sunday', '5:22', '19:49');
-insert into gymSchedule (gymUsername, dayOfWeek, startTime, endTime) values ('njancik1', 'Saturday', '11:53', '8:09');
-insert into gymSchedule (gymUsername, dayOfWeek, startTime, endTime) values ('ffragino3', 'Friday', '8:34', '19:33');
+INSERT INTO featuredIn
+    (eventID, exerciseName)
+VALUES
+    (1, 'Bicep Curls'),
+    (1, 'Squats'),
+    (1, 'Plank'),
+    (1, 'Reverse Crunches'),
+    (4, 'Push-Ups'),
+    (4, 'Supermans'),
+    (5, 'Side Plank'),
+    (5, 'Squats');
 
-insert into gymAmenities (gymUsername, facility) values ('ffragino3', 'Lempholemma chalazanum (Ach.) de Lesd.');
-insert into gymAmenities (gymUsername, facility) values ('ffragino3', 'Heuchera parvifolia Nutt. ex Torr. & A. Gray var. microcarpa Rosend., Butters & Lakela');
-insert into gymAmenities (gymUsername, facility) values ('sgotthard0', 'Stachys rigida Nutt. ex Benth. var. rigida');
-insert into gymAmenities (gymUsername, facility) values ('cbaffin2', 'Deschampsia holciformis J. Presl');
-insert into gymAmenities (gymUsername, facility) values ('rburke4', 'Euphorbia segetalis L.');
+INSERT INTO gymSchedule
+    (gymUsername, dayOfWeek, startTime, endTime)
+VALUES
+    ('ymcaboston', 'Monday', 06:00:00, 22:00:00),
+    ('ymcaboston', 'Tuesday', 06:00:00, 22:00:00),
+    ('ymcaboston', 'Wednesday', 06:00:00, 22:00:00),
+    ('ymcaboston', 'Thursday', 06:00:00, 22:00:00),
+    ('ymcaboston', 'Friday', 06:00:00, 22:00:00),
+    ('ymcaboston', 'Saturday', 06:00:00, 20:00:00),
+    ('ymcaboston', 'Sunday', 06:00:00, 20:00:00),
+    ('southend', 'Monday', 12:00:00, 03:00:00),
+    ('planetfitness', 'Saturday', 00:00:00, 23:59:59),
+    ('marino', 'Sunday', 05:00:00, 17:00:00),
+    ('marino', 'Tuesday', 03:00:00, 08:00:00);
 
-insert into likes (memberUsername, exerciseName, pr) values ('bburriss4', 'Sesuvium L.', 187);
-insert into likes (memberUsername, exerciseName, pr) values ('wklisch0', 'Orthotrichum bolanderi Sull.', 144);
-insert into likes (memberUsername, exerciseName, pr) values ('bburriss4', 'Orthotrichum bolanderi Sull.', 159);
-insert into likes (memberUsername, exerciseName, pr) values ('wklisch0', 'Sesuvium L.', 156);
-insert into likes (memberUsername, exerciseName, pr) values ('kplues1', 'Sesuvium L.', 111);
+INSERT INTO workoutContains
+    (workoutName, exerciseName, weight, sets, reps, repTime, restTime)
+VALUES
+    ('Workout #1', 'Bicep Curls', 20, 3, 15, null, null),
+    ('Workout #1', 'Shoulder Press', 30, 3, 10, null, null),
+    ('Workout #1', 'Push-Ups', 0, 3, 5, null, null),
+    ('Workout #1', 'Chest Flies', 50, 2, 10, null, null),
+    ('Workout #1', 'Lat Raises', 5, 1, 20, null, null),
+    ('Workout #2', 'Squats', 90, 3, 10, null, null),
+    ('Workout #2', 'Hip Abduction', 100, 2, 8, null, null),
+    ('Workout #2', 'Leg Curls', 70, 3, 12, null, null),
+    ('Workout #2', 'Calf Raises', 0, 3, 30, null, null),
+    ('Workout #3', 'Sit-Ups', 0, 3, 25, null, null),
+    ('Workout #3', 'Plank', 0, 2, null, 60, null),
+    ('Workout #3', 'Reverse Crunches', 0, 3, 20, null, null),
+    ('Workout #3', 'Supermans', 0, 3, 15, null, null),
+    ('Workout #3', 'Side Plank', 0, 6, null, 30, null);
 
-insert into workoutContains (workoutName, exerciseName, sets, reps, repTime, restTime) values ('Acetaminophen', 'Sesuvium L.', 8, 6, 10, 7);
-insert into workoutContains (workoutName, exerciseName, sets, reps, repTime, restTime) values ('Oxygen', 'Sesuvium L.', 7, 9, 6, 7);
-insert into workoutContains (workoutName, exerciseName, sets, reps, repTime, restTime) values ('Acetaminophen', 'Orthotrichum bolanderi Sull.', 8, 5, 10, 6);
-insert into workoutContains (workoutName, exerciseName, sets, reps, repTime, restTime) values ('T-BUTYL ALCOHOL', 'Acer rubrum L.', 10, 10, 5, 5);
-insert into workoutContains (workoutName, exerciseName, sets, reps, repTime, restTime) values ('Oxygen', 'Viola vallicola A. Nelson var. vallicola', 2, 8, 9, 6);
 
-insert into targetMuscles (exerciseName, muscleGroup) values ('Viola vallicola A. Nelson var. vallicola', 'Ara macao');
-insert into targetMuscles (exerciseName, muscleGroup) values ('Acer rubrum L.', 'Alcelaphus buselaphus cokii');
-insert into targetMuscles (exerciseName, muscleGroup) values ('Orthotrichum bolanderi Sull.', 'Sciurus niger');
-insert into targetMuscles (exerciseName, muscleGroup) values ('Sesuvium L.', 'Chlidonias leucopterus');
-insert into targetMuscles (exerciseName, muscleGroup) values ('Ziziphus reticulata (Vahl) DC.', 'Platalea leucordia');
