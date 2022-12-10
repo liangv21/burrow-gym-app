@@ -1,15 +1,17 @@
 # create new database for the app
 CREATE DATABASE burrowGymApp;
 
-# set bursrowGymApp as current database
+# set burrowGymApp as current database
 USE burrowGymApp;
 
 # create new administrative position with username/password
-CREATE USER 'jyaleen'@'%'
-    IDENTIFIED BY 'gymratadmin';
+CREATE USER 'jyaleen'
+    IDENTIFIED BY 'webapp_password';
 
 # allows created user to perform all operations on db
-GRANT ALL PRIVILEGES ON burrowGymApp.* TO 'jyaleen'@'%';
+GRANT ALL PRIVILEGES ON burrowGymApp.* TO 'jyaleen';
+
+FLUSH PRIVILEGES;
 
 # double checking: are we in the correct database?
 USE burrowGymApp;
