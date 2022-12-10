@@ -299,20 +299,20 @@ VALUES
 INSERT INTO event
     (eventID, description, name, streetAddress, city, state, zipCode, calendarDate, startTime, endTime, hostGym, supervisorTrainer)
 VALUES
-    (1, '[26:2] The LORD appeared to Isaac and said, "Do not go down to Egypt; settle in the land that I shall show you."', 'Workout with Wanda', '456 Random Ave', 'Boston', 'MA', 02113, 2022-10-09, 15:45:00, 16:45:00, 'ymcaboston', 'another_trainer'),
-    (2, 'Jesus did many other things as well. If every one of them were written down, I suppose that even the whole world would not have room for the books that would be written.', 'Protein Powder Potluck', '321 Huntington Ave', 'Boston', 'MA', 02110, 2022-12-10, 12:00:00, 14:00:00, 'ymcaboston', 'yetanother'),
-    (3, '"But Jael, Heber''s wife, picked up a tent peg and a hammer and went quietly to him while he lay fast asleep, exhausted. She drove the peg through his temple into the ground, and he died."', 'Gym Rats Eat Cheese', '456 Gainsborough St', 'Boston', 'MA', 02115, 2022-12-11, 16:00:00, 18:00:00, 'ymcaboston', null),
-    (4, '"Our father is old, and there is no man around here to give us children. Let us get our father to drink wine and then sleep with him and preserve our family line through our father"', '72nd Annual Powerlifting Nationals', '316 Huntington Ave', 'Boston', 'MA', 02115, 2023-01-01, 00:00:00, 05:00:00, 'ymcaboston', null),
-    (5, 'This is a random event description', 'Random Event Name', '123 Random St', 'Random', 'NY', 12345, 2023-02-02, 03:30:00, 04:30:00, 'randomgym', null);
+    (1, '[26:2] The LORD appeared to Isaac and said, "Do not go down to Egypt; settle in the land that I shall show you."', 'Workout with Wanda', '456 Random Ave', 'Boston', 'MA', 02113, '2022-10-09', '15:45:00', '16:45:00', 'ymcaboston', 'another_trainer'),
+    (2, 'Jesus did many other things as well. If every one of them were written down, I suppose that even the whole world would not have room for the books that would be written.', 'Protein Powder Potluck', '321 Huntington Ave', 'Boston', 'MA', 02110, '2022-12-10', '12:00:00', '14:00:00,' 'ymcaboston', 'yetanother'),
+    (3, '"But Jael, Heber''s wife, picked up a tent peg and a hammer and went quietly to him while he lay fast asleep, exhausted. She drove the peg through his temple into the ground, and he died."', 'Gym Rats Eat Cheese', '456 Gainsborough St', 'Boston', 'MA', 02115, '2022-12-11', '16:00:00', '18:00:00', 'ymcaboston', null),
+    (4, '"Our father is old, and there is no man around here to give us children. Let us get our father to drink wine and then sleep with him and preserve our family line through our father"', '72nd Annual Powerlifting Nationals', '316 Huntington Ave', 'Boston', 'MA', 02115, '2023-01-01', '00:00:00', '05:00:00', 'ymcaboston', null),
+    (5, 'This is a random event description', 'Random Event Name', '123 Random St', 'Random', 'NY', 12345, '2023-02-02', '03:30:00', '04:30:00', 'randomgym', null);
 
 INSERT INTO trainingSession
     (sessionID, description, cost, streetAddress, city, state, zipCode, calendarDate, startTime, endTime, trainerUsername)
 VALUES
-    (1, '[26:2] The LORD appeared to Isaac and said, "Do not go down to Egypt; settle in the land that I shall show you."', 'Crying With Calisthenics', '369 Huntington Ave', 'Boston', 'MA', 02115, 2022-12-11, 09:00:00, 10:00:00, 'jyaleen_trainer'),
-    (2, '[38:26] Then Judah acknowledged them and said, "She is more in the right than I, since I did not give her to my son Shelah." And he did not lie with her again.', '99 Symphony', 'Boston', 'MA', 02115, 2022-12-12, 12:00:00, 14:00:00, 'jyaleen_trainer'),
-    (3, '[46:1] When Israel set out on his journey with all that he had and came to Beer-sheba, he offered sacrifices to the God of his father Isaac.', 'Yoga with Togas', '100 Westland Ave', 'Boston', 'MA', 02115, 2022-12-13, 15:00:00, 16:00:00, 'jyaleen_trainer'),
-    (4, 'We are a group of driven college students who seek to spread Chinese culture through artful and unique performances of Chinese Dragon Dance and Lion Dance.', 'Dying with Dragon Dance', '400 Huntington Ave', 'Boston', 'MA', 02115, 2023-01-14, 19:00:00, 21:30:00, 'jyaleen_trainer'),
-    (5, 'This is a random training session description', 'Random Training Session Name', '123 Random St', 'Random', 'NY', 12345, 2023-03-03, 04:40:00, 05:40:00, 'haha');
+    (1, '[26:2] The LORD appeared to Isaac and said, "Do not go down to Egypt; settle in the land that I shall show you."', 'Crying With Calisthenics', '369 Huntington Ave', 'Boston', 'MA', 02115, '2022-12-11', '09:00:00', '10:00:00', 'jyaleen_trainer'),
+    (2, '[38:26] Then Judah acknowledged them and said, "She is more in the right than I, since I did not give her to my son Shelah." And he did not lie with her again.', '99 Symphony', 'Boston', 'MA', 02115, '2022-12-12', '12:00:00', '14:00:00', 'jyaleen_trainer'),
+    (3, '[46:1] When Israel set out on his journey with all that he had and came to Beer-sheba, he offered sacrifices to the God of his father Isaac.', 'Yoga with Togas', '100 Westland Ave', 'Boston', 'MA', 02115, '2022-12-13', '15:00:00', '16:00:00', 'jyaleen_trainer'),
+    (4, 'We are a group of driven college students who seek to spread Chinese culture through artful and unique performances of Chinese Dragon Dance and Lion Dance.', 'Dying with Dragon Dance', '400 Huntington Ave', 'Boston', 'MA', 02115, '2023-01-14', '19:00:00', '21:30:00', 'jyaleen_trainer'),
+    (5, 'This is a random training session description', 'Random Training Session Name', '123 Random St', 'Random', 'NY', 12345, '2023-03-03', '04:40:00', '05:40:00', 'haha');
 
 INSERT INTO exercises
     (name, description, safety, visual, isTimed, exerciseType)
@@ -370,11 +370,11 @@ VALUES
 INSERT INTO availabilities
     (memberUsername, dayOfWeek, startTime, endTime)
 VALUES
-    ('jyaleen_member', 'Monday', 12:00:00, 14:00:00),
-    ('jyaleen_member', 'Sunday', 14:00:00, 18:00:00),
-    ('fontenot', 'Saturday', 08:00:00, 14:00:00),
-    ('biden', 'Friday', 18:00:00, 23:00:00),
-    ('biden', 'Sunday', 12:00:00, 15:00:00);
+    ('jyaleen_member', 'Monday', '12:00:00', '14:00:00'),
+    ('jyaleen_member', 'Sunday', '14:00:00', '18:00:00'),
+    ('fontenot', 'Saturday', '08:00:00', '14:00:00'),
+    ('biden', 'Friday', '18:00:00', '23:00:00'),
+    ('biden', 'Sunday', '12:00:00', '15:00:00');
 
 INSERT INTO attendsEvent
     (eventID, memberUsername)
@@ -419,11 +419,11 @@ VALUES
 INSERT INTO workoutDone
     (workoutName, memberUsername, date, location)
 VALUES
-    ('Workout #1', 'jyaleen_member', 2022-11-30, null),
-    ('Workout #1', 'biden', 2022-12-01, 'The White House'),
-    ('Workout Name', 'fontenot', 2022-12-10, 'Richards Classroom'),
-    ('Trainer Workout', 'frenchman', 2022-12-11, null),
-    ('Another Workout Name', 'greenogre', 2022-12-12, null);
+    ('Workout #1', 'jyaleen_member', '2022-11-30', null),
+    ('Workout #1', 'biden', '2022-12-01', 'The White House'),
+    ('Workout Name', 'fontenot', '2022-12-10', 'Richards Classroom'),
+    ('Trainer Workout', 'frenchman', '2022-12-11', null),
+    ('Another Workout Name', 'greenogre', '2022-12-12', null);
 
 INSERT INTO attendsTraining
     (sessionID, memberUsername)
@@ -486,17 +486,17 @@ VALUES
 INSERT INTO gymSchedule
     (gymUsername, dayOfWeek, startTime, endTime)
 VALUES
-    ('ymcaboston', 'Monday', 06:00:00, 22:00:00),
-    ('ymcaboston', 'Tuesday', 06:00:00, 22:00:00),
-    ('ymcaboston', 'Wednesday', 06:00:00, 22:00:00),
-    ('ymcaboston', 'Thursday', 06:00:00, 22:00:00),
-    ('ymcaboston', 'Friday', 06:00:00, 22:00:00),
-    ('ymcaboston', 'Saturday', 06:00:00, 20:00:00),
-    ('ymcaboston', 'Sunday', 06:00:00, 20:00:00),
-    ('southend', 'Monday', 12:00:00, 03:00:00),
-    ('planetfitness', 'Saturday', 00:00:00, 23:59:59),
-    ('marino', 'Sunday', 05:00:00, 17:00:00),
-    ('marino', 'Tuesday', 03:00:00, 08:00:00);
+    ('ymcaboston', 'Monday', '06:00:00', '22:00:00'),
+    ('ymcaboston', 'Tuesday', '06:00:00', '22:00:00'),
+    ('ymcaboston', 'Wednesday', '06:00:00', '22:00:00'),
+    ('ymcaboston', 'Thursday', '06:00:00', '22:00:00'),
+    ('ymcaboston', 'Friday', '06:00:00', '22:00:00'),
+    ('ymcaboston', 'Saturday', '06:00:00', '20:00:00'),
+    ('ymcaboston', 'Sunday', '06:00:00', '20:00:00'),
+    ('southend', 'Monday', '12:00:00', '03:00:00'),
+    ('planetfitness', 'Saturday', '00:00:00', '23:59:59'),
+    ('marino', 'Sunday', '05:00:00', '17:00:00'),
+    ('marino', 'Tuesday', '03:00:00', '08:00:00');
 
 INSERT INTO workoutContains
     (workoutName, exerciseName, weight, sets, reps, repTime, restTime)
