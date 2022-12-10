@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="636ad58f-1c31-4e48-8eb4-804d0afef20e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/flask-app/src/members/members.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask-app/src/test_users.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask-app/src/trainers/trainers.py" afterDir="false" />
+    <list default="true" id="636ad58f-1c31-4e48-8eb4-804d0afef20e" name="Changes" comment="Changes">
+      <change beforePath="$PROJECT_DIR$/.idea/burrow-gym-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/burrow-gym-app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db/db_bootstrap.sql" beforeDir="false" afterPath="$PROJECT_DIR$/db/db_bootstrap.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-app/src/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/flask-app/src/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-app/src/members/members.py" beforeDir="false" afterPath="$PROJECT_DIR$/flask-app/src/members/members.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,24 +33,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenDatabaseViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/vanillin.211&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
-  },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
-    ],
-    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/&quot;: [
-      &quot;MySQL&quot;
-    ]
-  }
-}</component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <created>1670711882170</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1670711882170</updated>
+      <workItem from="1670711887109" duration="1350000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -59,5 +66,10 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
