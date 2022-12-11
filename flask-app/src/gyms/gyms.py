@@ -68,3 +68,27 @@ def get_gym_events(username):
 # create a new gym event
 @gyms.route('/newevent/<username>', methods=['POST'])
 def create_event(username):
+    # add details about session
+    event_name = request.form['Event Name']
+    description = request.form['Description']
+    address = request.form['Street Address']
+    city = request.form['City']
+    state = request.form['State']
+    zipCode = request.form['Zip Code']
+    calendarDate = request.form['Calendar Date']
+    startTime = request.form['Start Time']
+    endTime = request.form['End Time']
+    supervisorTrainer = request.form['Trainer']
+
+    # add to database
+    cursor = db.get_db().cursor()
+    query = '''
+        INSERT INTO event
+            (eventID, description, name, streetAddress, city, state, zipCode, calendarDate, startTime, endTime, hostGym, supervisorTrainer)
+        VALUES
+            ((SELECT max(eventID) FROM event) + 1, "{desc}", "{name}", "{add}", "{city}", "{state}", "{zipCode}", "{date}", "{startTime}", "{endTime}", "{host}", "{trainer}")
+    '''.format(description, event_name, address, city, state, zipCode, calendarDate, startTime, endTime, username, supervisorTrainer)
+    cursor.execute(query)
+    cursor.connection.commit()
+
+    return get_gym_events(username)

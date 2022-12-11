@@ -165,8 +165,8 @@ def create_workout(username):
 
     return get_member_workout()
 
-@members.route('/addexercise/<workout_name>', methods=['POST'])
-def add_exercise(workout_name):
+@members.route('/addexercise/<username>/<workout_name>', methods=['POST'])
+def add_exercise(username, workout_name):
     # add exercise
     exercise_name = request.form['Exercise Name']
     weight = request.form['Weight']
@@ -185,4 +185,4 @@ def add_exercise(workout_name):
     cursor.execute(query)
     cursor.connection.commit()
 
-    return get_member_workout()
+    return get_member_workout(username)
