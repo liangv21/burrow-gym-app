@@ -5,14 +5,42 @@ from src import db
 members = Blueprint('members', __name__)
 
 
-@members.route('/email/', methods=['GET'])
-def get_email():
+@members.route('/memberinfo/<username>', methods=['GET'])
+def get_info(username):
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of members
-    cursor.execute('SELECT email '
+    cursor.execute('SELECT * '
                    'FROM member m '
-                   'WHERE m.username = "biden"')
+                   'WHERE m.username = "{}";'.format(username))
+
+    # grab the column headers from the returned data
+    column_headers = [x[0] for x in cursor.description]
+
+    # create an empty dictionary object to use in
+    # putting column headers together with data
+    json_data = []
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # for each of the rows, zip the data elements together with
+    # the column headers.
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+
+    return jsonify(json_data)
+
+# Get member's favorite exercises
+@members.route('/memberinterests/<username>', methods=['GET'])
+def get_fav_exercises(username):
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
+
+    # use cursor to query the database for a list of members
+    cursor.execute('SELECT * '
+                   'FROM memberGymInterests '
+                   'WHERE memberUsername = "{}"'.format(username))
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]

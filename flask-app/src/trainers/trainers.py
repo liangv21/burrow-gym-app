@@ -5,6 +5,7 @@ from src import db
 trainers = Blueprint('trainers', __name__)
 
 
+# get all the trainers
 @trainers.route('/gettrainers', methods=['GET'])
 def get_trainers():
     # get a cursor object from the database
@@ -31,7 +32,7 @@ def get_trainers():
 
     return jsonify(json_data)
 
-
+# get all trainer-associated workouts
 @trainers.route('/gettrainerworkout/<username>', methods=['GET'])
 def get_trainer_workout(username):
     cursor = db.get_db().cursor()
@@ -110,7 +111,7 @@ def create_train_workout(username):
 
     return get_trainers()
 
-
+# add an exercise
 @trainers.route('/addexercise/<workout_name>', methods=['POST'])
 def add_exercise(workout_name):
     # add exercise
