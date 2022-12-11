@@ -13,7 +13,7 @@ def get_gym_info(username):
     # use cursor to query the database for a list of members
     cursor.execute('SELECT name, streetAddress, city, state, zipCode, profilePic, currentCapacity / capacity '
                    'FROM gym '
-                   'WHERE username = "{}"; '
+                   'WHERE username = "{}"; \n'
                    'SELECT * '
                    'FROM gymSchedule '
                    'WHERE gymUsername = "{}";'.format(username, username))

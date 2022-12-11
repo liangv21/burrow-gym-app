@@ -73,7 +73,7 @@ def get_members(username):
 @members.route('/nearbygyms/<username>', methods=['GET'])
 def get_gyms(username):
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT g.name, g.streetAddress, g.city, g.state, g.phoneNum '
+    cursor.execute('SELECT g.name, g.streetAddress, g.city, g.state, g.phoneNum, g.profilePic '
                    'FROM gym g JOIN member m '
                    'WHERE (SELECT m.city '
                    '       FROM member m '
