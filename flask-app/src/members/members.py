@@ -77,7 +77,7 @@ def get_gyms(username):
                    'FROM gym g JOIN member m '
                    'WHERE (SELECT m.city '
                    '       FROM member m '
-                   '       WHERE m.username = "{}") = m.city '
+                   '       WHERE m.username = "{}") = g.city '
                    'LIMIT 4;'.format(username))
 
     column_headers = [x[0] for x in cursor.description]
