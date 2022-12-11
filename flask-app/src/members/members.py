@@ -56,7 +56,7 @@ def get_members(username):
                    'FROM member m '
                    'WHERE (SELECT m.city '
                    '       FROM member m '
-                   '       WHERE m.username = {}) = m.city '
+                   '       WHERE m.username = "{}") = m.city '
                    'LIMIT 6;'.format(username))
 
     column_headers = [x[0] for x in cursor.description]
