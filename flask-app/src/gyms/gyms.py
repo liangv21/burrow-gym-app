@@ -11,12 +11,14 @@ def get_gym_info(username):
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of members
-    cursor.execute('SELECT name, streetAddress, city, state, zipCode, profilePic, currentCapacity / capacity '
-                   'FROM gym '
-                   'WHERE username = "{}"; \n'
-                   'SELECT * '
-                   'FROM gymSchedule '
-                   'WHERE gymUsername = "{}";'.format(username, username))
+    cursor.execute('''
+        SELECT name, streetAddress, city, state, zipCode, profilePic, currentCapacity / capacity 
+        FROM gym 
+        WHERE username = "{}"; 
+        SELECT * 
+        FROM gymSchedule 
+        WHERE gymUsername = "{}";
+    '''.format(username, username))
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
