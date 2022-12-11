@@ -92,3 +92,19 @@ def create_event(username):
     cursor.connection.commit()
 
     return get_gym_events(username)
+
+@gyms.route('/updatecapacity/<username>', methods=['PUT'])
+def update_capacity(username):
+
+    # add details about session
+    current_capacity = request.form['Current Capacity']
+
+    # add to database
+    cursor = db.get_db().cursor()
+    query = '''
+        UPDATE gym SET capacity = "{}" WHERE username = "{}"; 
+    '''.format(current_capacity, username)
+    cursor.execute(query)
+    cursor.connection.commit()
+
+    return get_gym_info(username)
