@@ -5,7 +5,7 @@ from src import db
 members = Blueprint('members', __name__)
 
 
-@members.route('/memberinfo/<username>', methods=['GET'])
+@members.route('/info/<username>', methods=['GET'])
 def get_info(username):
     cursor = db.get_db().cursor()
 
