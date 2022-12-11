@@ -4,34 +4,6 @@ from src import db
 
 members = Blueprint('members', __name__)
 
-
-@members.route('/email/', methods=['GET'])
-def get_email():
-  cursor = db.get_db().cursor()
-
-  # use cursor to query the database for a list of members
-  cursor.execute('SELECT email '
-                 'FROM member m '
-                 'WHERE m.username = "biden"')
-
-  # grab the column headers from the returned data
-  column_headers = [x[0] for x in cursor.description]
-
-  # create an empty dictionary object to use in
-  # putting column headers together with data
-  json_data = []
-
-  # fetch all the data from the cursor
-  theData = cursor.fetchall()
-
-  # for each of the rows, zip the data elements together with
-  # the column headers.
-  for row in theData:
-    json_data.append(dict(zip(column_headers, row)))
-
-  return jsonify(json_data)
-
-
 # Get all the members from the database in the same city (limit 6)
 @members.route('/nearbymembers/<username>', methods=['GET'])
 def get_members(username):
@@ -43,7 +15,7 @@ def get_members(username):
                  'FROM member m '
                  'WHERE (SELECT m.city'
                  '       FROM member m'
-                 '       WHERE m.username = {}) = m.city'
+                 '       WHERE m.username = "{}") = m.city'
                  'LIMIT 6;'.format(username))
 
   # grab the column headers from the returned data
@@ -71,11 +43,11 @@ def get_gyms(username):
   cursor = db.get_db().cursor()
 
   # use cursor to query the database for a list of gyms
-  cursor.execute('SELECT g.name, g.streetAddress, g.city, g.state, g.phoneNum'
-                 'FROM gym g JOIN member m'
-                 'WHERE (SELECT m.city'
-                 '       FROM member m'
-                 '       WHERE m.username = {}) = m.city'
+  cursor.execute('SELECT g.name, g.streetAddress, g.city, g.state, g.phoneNum '
+                 'FROM gym g JOIN member m '
+                 'WHERE (SELECT m.city '
+                 '       FROM member m '
+                 '       WHERE m.username = {}) = m.city '
                  'LIMIT 4;'.format(username))
 
   # grab the column headers from the returned data
@@ -104,7 +76,7 @@ def get_workout(username):
         SELECT wr.name, wc.exerciseName, wc.weight, wc.sets, wc.reps, wc.repTime
         FROM workoutContains wc JOIN workoutRoutine wr ON wc.workoutName = wr.name
                                 JOIN memberWorkoutCreated mwc on mwc.workoutName = wr.name
-        WHERE mwc.memberUsername = {} 
+        WHERE mwc.memberUsername = "{}" 
     '''.format(username)
   cursor.execute(query)
   # grab the column headers from the returned data
