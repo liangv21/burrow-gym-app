@@ -34,26 +34,14 @@ def get_info(username):
 # Get member's favorite exercises
 @members.route('/memberinterests/<username>', methods=['GET'])
 def get_fav_exercises(username):
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for a list of members
     cursor.execute('SELECT * '
                    'FROM memberGymInterests mgi JOIN exercises e ON e.name = mgi.exerciseName '
                    'WHERE mgi.memberUsername = "{}"'.format(username))
 
-    # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
-
-    # create an empty dictionary object to use in
-    # putting column headers together with data
     json_data = []
-
-    # fetch all the data from the cursor
     theData = cursor.fetchall()
-
-    # for each of the rows, zip the data elements together with
-    # the column headers.
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
 
@@ -63,10 +51,7 @@ def get_fav_exercises(username):
 # Get all the members from the database in the same city (limit 6)
 @members.route('/nearbymembers/<username>', methods=['GET'])
 def get_members(username):
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for a list of members
     cursor.execute('SELECT firstName, lastName, profilePic '
                    'FROM member m '
                    'WHERE (SELECT m.city'
@@ -74,18 +59,10 @@ def get_members(username):
                    '       WHERE m.username = {}) = m.city'
                    'LIMIT 6;'.format(username))
 
-    # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
-
-    # create an empty dictionary object to use in
-    # putting column headers together with data
     json_data = []
 
-    # fetch all the data from the cursor
     theData = cursor.fetchall()
-
-    # for each of the rows, zip the data elements together with
-    # the column headers.
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
 
@@ -95,10 +72,7 @@ def get_members(username):
 # Get all the gyms from the database in the same city (limit 4)
 @members.route('/nearbygyms/<username>', methods=['GET'])
 def get_gyms(username):
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for a list of gyms
     cursor.execute('SELECT g.name, g.streetAddress, g.city, g.state, g.phoneNum'
                    'FROM gym g JOIN member m'
                    'WHERE (SELECT m.city'
@@ -106,18 +80,10 @@ def get_gyms(username):
                    '       WHERE m.username = {}) = m.city'
                    'LIMIT 4;'.format(username))
 
-    # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
-
-    # create an empty dictionary object to use in
-    # putting column headers together with data
     json_data = []
 
-    # fetch all the data from the cursor
     theData = cursor.fetchall()
-
-    # for each of the rows, zip the data elements together with
-    # the column headers.
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
 
@@ -135,18 +101,10 @@ def get_member_workout(username):
         WHERE mwc.memberUsername = {} 
     '''.format(username)
     cursor.execute(query)
-    # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
 
-    # create an empty dictionary object to use in
-    # putting column headers together with data
     json_data = []
-
-    # fetch all the data from the cursor
     theData = cursor.fetchall()
-
-    # for each of the rows, zip the data elements together with
-    # the column headers.
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
 
