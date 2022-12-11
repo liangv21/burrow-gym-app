@@ -5,7 +5,7 @@ from src import db
 members = Blueprint('members', __name__)
 
 
-@members.route('/memberinfo/<username>', methods=['GET'])
+@members.route('/info/<username>', methods=['GET'])
 def get_info(username):
     cursor = db.get_db().cursor()
 
@@ -39,8 +39,8 @@ def get_fav_exercises(username):
 
     # use cursor to query the database for a list of members
     cursor.execute('SELECT * '
-                   'FROM memberGymInterests '
-                   'WHERE memberUsername = "{}"'.format(username))
+                   'FROM memberGymInterests mgi JOIN exercises e ON e.name = mgi.exerciseName '
+                   'WHERE mgi.memberUsername = "{}"'.format(username))
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
