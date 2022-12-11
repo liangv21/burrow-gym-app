@@ -12,13 +12,10 @@ def get_gym_info(username):
 
     # use cursor to query the database for a list of members
     cursor.execute('''
-        SELECT name, streetAddress, city, state, zipCode, profilePic, currentCapacity / capacity 
-        FROM gym 
-        WHERE username = "{}"; 
-        SELECT * 
-        FROM gymSchedule 
-        WHERE gymUsername = "{}";
-    '''.format(username, username))
+        SELECT name, streetAddress, city, state, zipCode, profilePic, currentCapacity / capacity, dayOfWeek, startTime, endTime
+        FROM gym g JOIN gymSchedule gs ON g.username = gs.gymUsername
+        WHERE g.username = "{}";
+    '''.format(username))
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
