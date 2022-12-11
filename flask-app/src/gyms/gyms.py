@@ -30,7 +30,7 @@ def get_gym_info(username):
     # for each of the rows, zip the data elements together with
     # the column headers.
     for row in theData:
-        json_data.append(json.dumps(dict(zip(column_headers, row))), default=str)
+        json_data.append(dict(zip(column_headers, row)))
 
     return jsonify(json_data)
 

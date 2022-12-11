@@ -293,11 +293,11 @@ VALUES
 INSERT INTO gym
     (username, password, email, phoneNum, name, streetAddress, city, state, zipCode, profilePic, capacity, currentCapacity)
 VALUES
-    ('ymcaboston', 'whyemseea', 'ymca@ymca.org', 1111111111, 'YMCA Boston', '316 Huntington Ave', 'Boston', 'MA', 02115, 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/YMCA_Huntington_Avenue_Boston_entrance.jpg/220px-YMCA_Huntington_Avenue_Boston_entrance.jpg', '50', '20'),
-    ('planetfitness', 'saturniscool', 'planetfitness@pf.org', 2222222222, 'Planet Fitness', '17 Winter St', 'Boston', 'MA', 02108, 'https://prodd8.planetfitness.com/sites/default/files/styles/gallery_full_image/public/2021-05/exterior_1.jpg', '40', '10'),
-    ('southend', 'fitnesscenter', 'southend@south.south', 3333333333, 'South End Fitness Center', '785 Albany St, 4th Fl', 'Boston', 'MA', 02118, 'https://cdntrust.s3.us-east-2.amazonaws.com/busines/b552a450-c4d3-4d5f-9299-d592582150dd/0.jpg', '45', '15'),
-    ('marino', 'nosquatracks', 'marino@marino.edu', 4444444444, 'Marino Recreation Center', '369 Huntington Ave', 'Boston', 'MA', 02115, 'https://huntnewsnu.com/wp-content/uploads/2014/05/4847936340_ac406b6658_b-1024x683.jpg', '2', '1'),
-    ('randomgym', 'randomgym', 'random@random.gym', 5555555555, 'Random Gym', '123 Boston Ave', 'New York', 'NY', 10009, null, '30', '20');
+    ('ymcaboston', 'whyemseea', 'ymca@ymca.org', 1111111111, 'YMCA Boston', '316 Huntington Ave', 'Boston', 'MA', 02115, 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/YMCA_Huntington_Avenue_Boston_entrance.jpg/220px-YMCA_Huntington_Avenue_Boston_entrance.jpg', 50, 20),
+    ('planetfitness', 'saturniscool', 'planetfitness@pf.org', 2222222222, 'Planet Fitness', '17 Winter St', 'Boston', 'MA', 02108, 'https://prodd8.planetfitness.com/sites/default/files/styles/gallery_full_image/public/2021-05/exterior_1.jpg', 40, 10),
+    ('southend', 'fitnesscenter', 'southend@south.south', 3333333333, 'South End Fitness Center', '785 Albany St, 4th Fl', 'Boston', 'MA', 02118, 'https://cdntrust.s3.us-east-2.amazonaws.com/busines/b552a450-c4d3-4d5f-9299-d592582150dd/0.jpg', 45, 15),
+    ('marino', 'nosquatracks', 'marino@marino.edu', 4444444444, 'Marino Recreation Center', '369 Huntington Ave', 'Boston', 'MA', 02115, 'https://huntnewsnu.com/wp-content/uploads/2014/05/4847936340_ac406b6658_b-1024x683.jpg', 2, 1),
+    ('randomgym', 'randomgym', 'random@random.gym', 5555555555, 'Random Gym', '123 Boston Ave', 'New York', 'NY', 10009, null, 30, 20);
 
 INSERT INTO event
     (eventID, description, name, streetAddress, city, state, zipCode, calendarDate, startTime, endTime, hostGym, supervisorTrainer)
