@@ -68,29 +68,29 @@ def get_gym_events(username):
 
 
 # create a new gym event
-@gyms.route('/newevent/<username>', methods=['POST'])
+@gyms.route('/newevent/<username>', methods=['POST', 'GET'])
 def create_event(username):
 
     # add details about session
-    event_name = request.form['Event Name']
-    description = request.form['Description']
-    address = request.form['Street Address']
-    city = request.form['City']
-    state = request.form['State']
-    zipCode = request.form['Zip Code']
-    profilePic = request.form['Event Picture']
-    startTime = request.form['Start Time']
-    endTime = request.form['End Time']
-    supervisorTrainer = request.form['Trainer']
+    event_name = request.form['name']
+    description = request.form['description']
+    address = request.form['address']
+    city = request.form['city']
+    state = request.form['state']
+    zipCode = request.form['zip']
+    # eventPic = request.form['eventPic']
+    startTime = request.form['startTime']
+    endTime = request.form['endTime']
+    supervisorTrainer = request.form['trainer']
 
     # add to database
     cursor = db.get_db().cursor()
     query = '''
         INSERT INTO event
-            (eventID, description, name, streetAddress, city, state, zipCode, profilePic, startTime, endTime, hostGym, supervisorTrainer)
+            (eventID, description, name, streetAddress, city, state, zipCode, startTime, endTime, hostGym, supervisorTrainer)
         VALUES
-            ((SELECT max(eventID) FROM event) + 1, "{desc}", "{name}", "{add}", "{city}", "{state}", "{zipCode}", "{profilePic}", "{startTime}", "{endTime}", "{host}", "{trainer}")
-    '''.format(description, event_name, address, city, state, zipCode, profilePic, startTime, endTime, username, supervisorTrainer)
+            ((SELECT max(eventID) + 1 FROM event), "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}")
+    '''.format(description, event_name, address, city, state, zipCode, startTime, endTime, username, supervisorTrainer)
     cursor.execute(query)
     cursor.connection.commit()
 
@@ -110,4 +110,4 @@ def update_capacity(username):
     cursor.execute(query)
     cursor.connection.commit()
 
-    return get_gym_info_attempt1(username)
+    return get_gym_info(username)

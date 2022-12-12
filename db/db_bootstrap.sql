@@ -70,7 +70,6 @@ CREATE TABLE event (
     city CHAR(50) NOT NULL,
     state CHAR(50),
     zipCode BIGINT UNSIGNED,
-    profilePic NVARCHAR(2000),
     startTime DATETIME NOT NULL,
     endTime DATETIME NOT NULL,
     hostGym CHAR(25) NOT NULL,
@@ -301,13 +300,13 @@ VALUES
     ('randomgym', 'randomgym', 'random@random.gym', 5555555555, 'Random Gym', '123 Boston Ave', 'New York', 'NY', 10009, null, 30, 20);
 
 INSERT INTO event
-    (eventID, description, name, streetAddress, city, state, zipCode, profilePic, startTime, endTime, hostGym, supervisorTrainer)
+    (eventID, description, name, streetAddress, city, state, zipCode, startTime, endTime, hostGym, supervisorTrainer)
 VALUES
-    (1, '[26:2] The LORD appeared to Isaac and said, "Do not go down to Egypt; settle in the land that I shall show you."', 'Workout with Wanda', '456 Random Ave', 'Boston', 'MA', 02113, null, '2022-10-09 15:45:00', '2022-10-09 16:45:00', 'ymcaboston', 'another_trainer'),
-    (2, 'Jesus did many other things as well. If every one of them were written down, I suppose that even the whole world would not have room for the books that would be written.', 'Protein Powder Potluck', '321 Huntington Ave', 'Boston', 'MA', 02110, null, '2022-12-10 12:00:00', '2022-12-10 14:00:00', 'ymcaboston', 'yetanother'),
-    (3, '"But Jael, Heber''s wife, picked up a tent peg and a hammer and went quietly to him while he lay fast asleep, exhausted. She drove the peg through his temple into the ground, and he died."', 'Gym Rats Eat Cheese', '456 Gainsborough St', 'Boston', 'MA', 02115, null, '2022-12-11 16:00:00', '2022-12-11 18:00:00', 'ymcaboston', null),
-    (4, '"Our father is old, and there is no man around here to give us children. Let us get our father to drink wine and then sleep with him and preserve our family line through our father"', '72nd Annual Powerlifting Nationals', '316 Huntington Ave', 'Boston', 'MA', 02115, null, '2023-01-01 00:00:00', '2023-01-01 05:00:00', 'ymcaboston', null),
-    (5, 'This is a random event description', 'Random Event Name', '123 Random St', 'Random', 'NY', 12345, null, '2023-02-02 03:30:00', '2023-02-02 04:30:00', 'randomgym', null);
+    (1, '[26:2] The LORD appeared to Isaac and said, "Do not go down to Egypt; settle in the land that I shall show you."', 'Workout with Wanda', '456 Random Ave', 'Boston', 'MA', 02113, '2022-10-09 15:45:00', '2022-10-09 16:45:00', 'ymcaboston', 'another_trainer'),
+    (2, 'Jesus did many other things as well. If every one of them were written down, I suppose that even the whole world would not have room for the books that would be written.', 'Protein Powder Potluck', '321 Huntington Ave', 'Boston', 'MA', 02110, '2022-12-10 12:00:00', '2022-12-10 14:00:00', 'ymcaboston', 'yetanother'),
+    (3, '"But Jael, Heber''s wife, picked up a tent peg and a hammer and went quietly to him while he lay fast asleep, exhausted. She drove the peg through his temple into the ground, and he died."', 'Gym Rats Eat Cheese', '456 Gainsborough St', 'Boston', 'MA', 02115, '2022-12-11 16:00:00', '2022-12-11 18:00:00', 'ymcaboston', null),
+    (4, '"Our father is old, and there is no man around here to give us children. Let us get our father to drink wine and then sleep with him and preserve our family line through our father"', '72nd Annual Powerlifting Nationals', '316 Huntington Ave', 'Boston', 'MA', 02115, '2023-01-01 00:00:00', '2023-01-01 05:00:00', 'ymcaboston', null),
+    (5, 'This is a random event description', 'Random Event Name', '123 Random St', 'Random', 'NY', 12345, '2023-02-02 03:30:00', '2023-02-02 04:30:00', 'randomgym', null);
 
 INSERT INTO trainingSession
     (sessionID, description, name, cost, streetAddress, city, state, zipCode, profilePic, startTime, endTime, trainerUsername)
