@@ -117,7 +117,12 @@ def create_workout(username):
     workout_name = request.form['workoutName']
 
     cursor = db.get_db().cursor()
-    query = ''
+    query = '''
+        INSERT INTO workoutRoutine (name)
+        VALUES ("{}");
+        INSERT INTO memberWorkoutCreated (workoutName, memberUsername)
+        VALUES ("{}", "{}")
+    '''.format(workout_name, workout_name, username)
     cursor.execute(query)
     cursor.connection.commit()
 
@@ -136,11 +141,32 @@ def add_exercise(username, workout_name):
     # add to database
     cursor = db.get_db().cursor()
     query = '''
-        INSERT INTO workoutContains
-        VALUES "{workout}", "{exercise}", "{weight}", "{sets}",
-               "{reps}", "{repTime}", "{restTime}"
+        INSERT INTO workoutContains (workoutName, exerciseName, weight, sets, reps, repTime, restTime)
+        VALUES ("{workout}", "{exercise}", "{weight}", "{sets}",
+               "{reps}", "{repTime}", "{restTime}")
     '''.format(workout_name, exercise_name, weight, sets, reps, repTime, restTime)
     cursor.execute(query)
     cursor.connection.commit()
 
     return get_member_workout(username)
+
+
+
+# add an exercise interest
+@members.route('/addinterest/<username>', methods=['POST'])
+def add_interest(username):
+
+    # add exercise
+    exercise_name = request.form['Exercise']
+    pr = request.form['PR']
+
+    # add to database
+    cursor = db.get_db().cursor()
+    query = '''
+        INSERT INTO memberGymInterests (memberUsername, exerciseName, pr) 
+        VALUES ("{}", "{}", "{}"); 
+    '''.format(username, exercise_name, pr)
+    cursor.execute(query)
+    cursor.connection.commit()
+
+    return get_fav_exercises
