@@ -7,7 +7,7 @@ trainers = Blueprint('trainers', __name__)
 
 # get all data from one of the trainers
 @trainers.route('/info/<username>', methods=['GET'])
-def get_trainer_info():
+def get_trainer_info(username):
     cursor = db.get_db().cursor()
     cursor.execute('SELECT * '
                    'FROM trainer t '
@@ -96,15 +96,16 @@ def create_training(username):
     city = request.form['City']
     state = request.form['State']
     zipcode = request.form['Zip Code']
+    eventPic = request.form['Event Picture']
 
     # add to database
     cursor = db.get_db().cursor()
     query = '''
         INSERT INTO trainingSession
-            (sessionID, description, name, cost, streetAddress, city, state, zipCode, startTime, endTime, trainerUsername)
+            (sessionID, description, name, cost, streetAddress, city, state, zipCode, profilePic, startTime, endTime, trainerUsername)
         VALUES
-            ((SELECT max(sessionID) FROM trainingSession) + 1, "{desc}", "{name}", "{cost}", "{add}", "{city}", "{state}", "{zip}", "{start}", "{end}", "{user}")
-    '''.format(description, session_name, cost, street_address, city, state, zipcode,
+            ((SELECT max(sessionID) FROM trainingSession) + 1, "{desc}", "{name}", "{cost}", "{add}", "{city}", "{state}", "{zip}", "{profilePic}", "{start}", "{end}", "{user}")
+    '''.format(description, session_name, cost, street_address, city, state, zipcode, eventPic,
                start_time, end_time, username)
     cursor.execute(query)
     cursor.connection.commit()
