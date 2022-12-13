@@ -90,6 +90,11 @@ def create_training(username):
     session_name = request.form['Name']
     start_time = request.form['Start Time']
     end_time = request.form['End Time']
+
+    for letter in ['T', 'Z']:
+        start_time = start_time.replace(letter, ' ')
+        end_time = end_time.replace(letter, ' ')
+
     cost = request.form['Cost']
     description = request.form['Description']
     street_address = request.form['Street Address']
@@ -102,9 +107,9 @@ def create_training(username):
     cursor = db.get_db().cursor()
     query = '''
         INSERT INTO trainingSession
-            (sessionID, description, name, cost, streetAddress, city, state, zipCode, profilePic, startTime, endTime, trainerUsername)
+            (description, name, cost, streetAddress, city, state, zipCode, profilePic, startTime, endTime, trainerUsername)
         VALUES
-            ((SELECT max(sessionID) FROM trainingSession) + 1, "{desc}", "{name}", "{cost}", "{add}", "{city}", "{state}", "{zip}", "{profilePic}", "{start}", "{end}", "{user}")
+            ("{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}")
     '''.format(description, session_name, cost, street_address, city, state, zipcode, eventPic,
                start_time, end_time, username)
     cursor.execute(query)
@@ -175,4 +180,4 @@ def add_interest(username):
     cursor.execute(query)
     cursor.connection.commit()
 
-    return get_trainer_interests
+    return get_trainer_interests()

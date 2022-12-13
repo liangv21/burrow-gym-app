@@ -107,7 +107,6 @@ def create_event(username):
     city = request.form['city']
     state = request.form['state']
     zipCode = request.form['zip']
-    eventPic = request.form['eventPic']
     startTime = request.form['startTime']
     endTime = request.form['endTime']
 
@@ -121,10 +120,10 @@ def create_event(username):
     cursor = db.get_db().cursor()
     query = '''
         INSERT INTO event
-            (description, name, streetAddress, city, state, zipCode, profilePic, startTime, endTime, hostGym, supervisorTrainer)
+            (description, name, streetAddress, city, state, zipCode, startTime, endTime, hostGym, supervisorTrainer)
         VALUES
-            ("{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}")
-    '''.format(description, event_name, address, city, state, zipCode, eventPic, startTime, endTime, username, supervisorTrainer)
+            ("{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}")
+    '''.format(description, event_name, address, city, state, zipCode, startTime, endTime, username, supervisorTrainer)
     cursor.execute(query)
     cursor.connection.commit()
 
