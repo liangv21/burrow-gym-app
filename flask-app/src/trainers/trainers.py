@@ -133,7 +133,7 @@ def create_training(username):
     cursor.execute(query)
     cursor.connection.commit()
 
-    return get_trainer_workout()
+    return get_trainer_session(username)
 
 
 # create a workout
@@ -154,7 +154,7 @@ def create_train_workout(username):
     cursor.execute(query)
     cursor.connection.commit()
 
-    return get_trainer_workout()
+    return get_trainer_workout(username)
 
 # add an exercise
 @trainers.route('/addexercise/<workout_name>', methods=['POST'])
