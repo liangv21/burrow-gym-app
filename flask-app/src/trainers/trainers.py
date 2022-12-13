@@ -61,6 +61,24 @@ def get_trainer_interests(username):
     return jsonify(json_data)
 
 
+# Get trainers' favorite exercises
+@trainers.route('/trainingsession/<username>', methods=['GET'])
+def get_trainer_session(username):
+    cursor = db.get_db().cursor()
+    cursor.execute('SELECT * '
+                   'FROM trainingSession ts '
+                   'WHERE ts.trainerUsername = "{}"'.format(username))
+
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+
+    return jsonify(json_data)
+
+
 # get all trainer-associated workouts
 @trainers.route('/getworkout/<username>', methods=['GET'])
 def get_trainer_workout(username):
