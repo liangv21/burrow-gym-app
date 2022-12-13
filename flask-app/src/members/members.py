@@ -98,7 +98,7 @@ def get_member_workout(username):
         SELECT wr.name, wc.exerciseName, wc.weight, wc.sets, wc.reps, wc.repTime
         FROM workoutContains wc JOIN workoutRoutine wr ON wc.workoutName = wr.name
                                 JOIN memberWorkoutCreated mwc on mwc.workoutName = wr.name
-        WHERE mwc.memberUsername = {} 
+        WHERE mwc.memberUsername = "{}" 
     '''.format(username)
     cursor.execute(query)
     column_headers = [x[0] for x in cursor.description]
