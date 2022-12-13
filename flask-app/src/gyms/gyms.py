@@ -87,9 +87,9 @@ def create_event(username):
     cursor = db.get_db().cursor()
     query = '''
         INSERT INTO event
-            (eventID, description, name, streetAddress, city, state, zipCode, startTime, endTime, hostGym, supervisorTrainer)
+            (description, name, streetAddress, city, state, zipCode, startTime, endTime, hostGym, supervisorTrainer)
         VALUES
-            ((SELECT max(eventID) + 1 FROM event), "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}")
+            ("{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}")
     '''.format(description, event_name, address, city, state, zipCode, startTime, endTime, username, supervisorTrainer)
     cursor.execute(query)
     cursor.connection.commit()
