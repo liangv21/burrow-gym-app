@@ -14,7 +14,7 @@ def get_gym_info(username):
     # use cursor to query the database for a list of members
     cursor.execute('''
         SELECT * FROM gym WHERE username = "{}";
-    '''.format(username, username))
+    '''.format(username))
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -31,7 +31,7 @@ def get_gym_info(username):
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
 
-    response = make_response(json.dumps(json_data, default=str))
+    response = make_response(json_data)
 
     return response
 
@@ -45,7 +45,7 @@ def get_gym_schedule(username):
     # use cursor to query the database for a list of members
     cursor.execute('''
         SELECT * FROM gymSchedule WHERE gymUsername = "{}";
-    '''.format(username, username))
+    '''.format(username))
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -107,12 +107,11 @@ def create_event(username):
     city = request.form['city']
     state = request.form['state']
     zipCode = request.form['zip']
-    # eventPic = request.form['eventPic']
+    eventPic = request.form['eventPic']
     startTime = request.form['startTime']
     endTime = request.form['endTime']
 
     for letter in ['T', 'Z']:
-        print(letter)
         startTime = startTime.replace(letter, ' ')
         endTime = endTime.replace(letter, ' ')
 
@@ -122,10 +121,10 @@ def create_event(username):
     cursor = db.get_db().cursor()
     query = '''
         INSERT INTO event
-            (description, name, streetAddress, city, state, zipCode, startTime, endTime, hostGym, supervisorTrainer)
+            (description, name, streetAddress, city, state, zipCode, profilePic, startTime, endTime, hostGym, supervisorTrainer)
         VALUES
-            ("{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}")
-    '''.format(description, event_name, address, city, state, zipCode, startTime, endTime, username, supervisorTrainer)
+            ("{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}")
+    '''.format(description, event_name, address, city, state, zipCode, eventPic, startTime, endTime, username, supervisorTrainer)
     cursor.execute(query)
     cursor.connection.commit()
 
