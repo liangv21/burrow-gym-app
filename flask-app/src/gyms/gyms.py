@@ -31,7 +31,7 @@ def get_gym_info(username):
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
 
-    response = make_response(json.dumps(json_data, default=str))
+    response = make_response(json_data)
 
     return response
 
