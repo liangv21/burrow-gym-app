@@ -13,10 +13,39 @@ def get_gym_info(username):
 
     # use cursor to query the database for a list of members
     cursor.execute('''
-        SELECT *, currentCapacity / capacity AS percentCapacity 
-        FROM gym g JOIN gymSchedule gs ON g.username = gs.gymUsername
-        WHERE g.username = "{}";
-    '''.format(username))
+        SELECT * FROM gym WHERE username = "{}";
+    '''.format(username, username))
+
+    # grab the column headers from the returned data
+    column_headers = [x[0] for x in cursor.description]
+
+    # create an empty dictionary object to use in
+    # putting column headers together with data
+    json_data = []
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # for each of the rows, zip the data elements together with
+    # the column headers.
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+
+    response = make_response(json.dumps(json_data, default=str))
+
+    return response
+
+
+# obtaining gym info
+@gyms.route('/gymschedule/<username>', methods=['GET'])
+def get_gym_schedule(username):
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
+
+    # use cursor to query the database for a list of members
+    cursor.execute('''
+        SELECT * FROM gymSchedule WHERE gymUsername = "{}";
+    '''.format(username, username))
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -81,15 +110,21 @@ def create_event(username):
     # eventPic = request.form['eventPic']
     startTime = request.form['startTime']
     endTime = request.form['endTime']
+
+    for letter in ['T', 'Z']:
+        print(letter)
+        startTime = startTime.replace(letter, ' ')
+        endTime = endTime.replace(letter, ' ')
+
     supervisorTrainer = request.form['trainer']
 
     # add to database
     cursor = db.get_db().cursor()
     query = '''
         INSERT INTO event
-            (eventID, description, name, streetAddress, city, state, zipCode, startTime, endTime, hostGym, supervisorTrainer)
+            (description, name, streetAddress, city, state, zipCode, startTime, endTime, hostGym, supervisorTrainer)
         VALUES
-            ((SELECT max(eventID) + 1 FROM event), "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}")
+            ("{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}")
     '''.format(description, event_name, address, city, state, zipCode, startTime, endTime, username, supervisorTrainer)
     cursor.execute(query)
     cursor.connection.commit()
