@@ -48,8 +48,8 @@ def get_trainer_gyms(username):
 def get_trainer_interests(username):
     cursor = db.get_db().cursor()
     cursor.execute('SELECT * '
-                   'FROM trainerGymInterests tgi JOIN exercises e ON e.name = tgi.exerciseName '
-                   'WHERE tgi.memberUsername = "{}"'.format(username))
+                   'FROM trainerGymInterests tgi JOIN exercises e ON e.name = tgi.interest '
+                   'WHERE tgi.trainerUsername = "{}"'.format(username))
 
     column_headers = [x[0] for x in cursor.description]
     json_data = []
