@@ -33,3 +33,9 @@ Initializes the folders and their API routes
 
 ### requirements.txt
 Docker requirements for building
+
+# Starting the Project
+1. Open the terminal in the top-level folder, burrow-gym-app
+2. Execute `docker compose build` then `docker compose up`
+3. Open terminal where ngrok.exe is stored, execute `ngrok http 8001`
+4. Open the Burrow AppSmith project
